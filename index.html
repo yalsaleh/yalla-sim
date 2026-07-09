@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yalla Sim</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Intro: dot → line → sim → yalla (bottom to top) -->
+  <div id="splash" class="splash">
+    <div class="logo-build" aria-hidden="true">
+      <img class="logo-part logo-part--yalla" src="assets/parts/yalla.png?v=5" alt="">
+      <img class="logo-part logo-part--sim" src="assets/parts/sim.png?v=5" alt="">
+      <img class="logo-part logo-part--arc" src="assets/parts/arc.png?v=5" alt="">
+      <img class="logo-part logo-part--dot" src="assets/parts/dot.png?v=5" alt="">
+    </div>
+  </div>
+
+  <!-- Main page -->
+  <div id="page" class="page">
+    <div class="nav-wrapper">
+      <nav class="nav">
+        <a href="index.html" class="nav__brand">
+          <img src="assets/logo.png" alt="Yalla Sim" class="nav__logo">
+        </a>
+        <ul class="nav__links">
+          <li><a href="#">Benefits</a></li>
+          <li><a href="#">Coverage</a></li>
+          <li><a href="#">How it Works</a></li>
+          <li><a href="#">Pricing</a></li>
+          <li><a href="support.html">Contact</a></li>
+        </ul>
+        <a href="#" data-whatsapp class="nav__cta">Get YallaSim &rsaquo;</a>
+      </nav>
+    </div>
+
+    <section class="hero">
+      <h1 class="hero__title">Internet anywhere.<br>Stay connected everywhere.</h1>
+      <p class="hero__subtitle">Internet is one message away. Chat with us on WhatsApp for fast, reliable and secure eSIM data plans.</p>
+      
+      <a data-whatsapp class="btn-primary" href="#" target="_blank" rel="noopener noreferrer">
+        Get Started &rsaquo;
+      </a>
+
+      <div class="hero__showcase">
+        <div class="hero__showcase-bg"></div>
+        <div class="tablet-mockup" style="z-index: 1;">
+          <img src="assets/map-screen.png" alt="Yalla Sim Coverage Map" class="tablet-screen-img">
+        </div>
+      </div>
+    </section>
+
+    <!-- Trusted By -->
+    <div class="partners">
+      <span>Trusted by:</span>
+      <div class="partners-logos">
+         <strong>airalo</strong>
+         <strong>Holafly</strong>
+         <strong>tripadvisor</strong>
+         <strong>trustpilot</strong>
+         <strong>mobiMatter</strong>
+      </div>
+    </div>
+
+    <!-- Features -->
+    <section id="benefits" class="section">
+      <h2 class="section-title">Why choose Yalla Sim?</h2>
+      <p class="section-subtitle">Experience the future of connectivity with our liquid-smooth platform.</p>
+      
+      <div class="features-grid">
+         <div class="flight-ticket">
+           <div class="ticket-content">
+             <!-- Ticket Stub -->
+             <div class="ticket-stub">
+               <div class="ticket-barcode-top">||| || | |||| || | |||</div>
+               <div class="ticket-stub-row">
+                 <ul class="ticket-checklist">
+                   <li>TRAVELER'S CHECKLIST:</li>
+                   <li>• E-SIM ENABLED</li>
+                   <li>• PASSPORT</li>
+                   <li>• GOOD VIBES ONLY</li>
+                 </ul>
+                 <div class="ticket-quote">
+                    <span>"INTERNET IS ONE MESSAGE AWAY."</span>
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=40x40&data=https://wa.me/15551234567" alt="QR" style="width: 32px; height: 32px;">
+                 </div>
+               </div>
+             </div>
+             
+             <div class="ticket-divider"></div>
+             
+             <!-- Ticket Body -->
+             <div class="ticket-main">
+               <div class="ticket-main-header">
+                 <div class="ticket-city">TYO</div>
+                 <div class="ticket-flight-info">
+                   <div>FLIGHT: YS-001</div>
+                   <div>GATE: 1A</div>
+                 </div>
+               </div>
+               
+               <div class="ticket-main-body">
+                 <h2 class="ticket-vertical">INSTANT</h2>
+                 <div class="ticket-details">
+                   <div class="ticket-detail-item">
+                     <span>DATE</span>
+                     <strong>TODAY</strong>
+                   </div>
+                   <div class="ticket-detail-item">
+                     <span>CABIN</span>
+                     <strong>FIRST CLASS</strong>
+                   </div>
+                   <div class="ticket-detail-item">
+                     <span>SEAT</span>
+                     <strong>D09</strong>
+                   </div>
+                   <div class="ticket-detail-item">
+                     <span>BOARDING</span>
+                     <strong>NOW</strong>
+                   </div>
+                   <div class="ticket-detail-item" style="grid-column: span 2;">
+                     <span>PASSENGER</span>
+                     <strong>XXXXXXXXX</strong>
+                   </div>
+                 </div>
+               </div>
+               
+               <p class="ticket-desc">Scan a QR code and get connected in minutes. No physical SIM card required.</p>
+               <div class="ticket-barcode-bottom">||| || ||| || ||| ||| | ||</div>
+             </div>
+           </div>
+         </div>
+
+         <div class="flight-ticket">
+           <div class="ticket-content">
+             <!-- Ticket Stub -->
+             <div class="ticket-stub">
+               <div class="ticket-barcode-top">|| | ||| || ||| | |||</div>
+               <div class="ticket-stub-row">
+                 <ul class="ticket-checklist">
+                   <li>TRAVELER'S CHECKLIST:</li>
+                   <li>• NO ROAMING FEES</li>
+                   <li>• PASSPORT</li>
+                   <li>• SENSE OF ADVENTURE</li>
+                 </ul>
+                 <div class="ticket-quote">
+                    <span>"FEEL AT HOME ANYWHERE."</span>
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=40x40&data=https://wa.me/15551234567" alt="QR" style="width: 32px; height: 32px;">
+                 </div>
+               </div>
+             </div>
+             
+             <div class="ticket-divider"></div>
+             
+             <!-- Ticket Body -->
+             <div class="ticket-main">
+               <div class="ticket-main-header">
+                 <div class="ticket-city">LAX</div>
+                 <div class="ticket-flight-info">
+                   <div>FLIGHT: YS-200</div>
+                   <div>GATE: INT</div>
+                 </div>
+               </div>
+               
+               <div class="ticket-main-body">
+                 <h2 class="ticket-vertical">GLOBAL</h2>
+                 <div class="ticket-details">
+                   <div class="ticket-detail-item">
+                     <span>DATE</span>
+                     <strong>ANYTIME</strong>
+                   </div>
+                   <div class="ticket-detail-item">
+                     <span>CLASS</span>
+                     <strong>BUSINESS</strong>
+                   </div>
+                   <div class="ticket-detail-item">
+                     <span>DEST</span>
+                     <strong>200+</strong>
+                   </div>
+                   <div class="ticket-detail-item">
+                     <span>SPEED</span>
+                     <strong>5G/4G</strong>
+                   </div>
+                   <div class="ticket-detail-item" style="grid-column: span 2;">
+                     <span>PASSENGER</span>
+                     <strong>NOMAD</strong>
+                   </div>
+                 </div>
+               </div>
+               
+               <p class="ticket-desc">Travel to over 200 countries without ever losing connection or paying roaming fees.</p>
+               <div class="ticket-barcode-bottom">|| | ||| || ||| | ||| ||</div>
+             </div>
+           </div>
+         </div>
+
+         <div class="flight-ticket">
+           <div class="ticket-content">
+             <!-- Ticket Stub -->
+             <div class="ticket-stub">
+               <div class="ticket-barcode-top">|| ||| || | ||| || |</div>
+               <div class="ticket-stub-row">
+                 <ul class="ticket-checklist">
+                   <li>TRAVELER'S CHECKLIST:</li>
+                   <li>• WHATSAPP INSTALLED</li>
+                   <li>• PASSPORT</li>
+                   <li>• ZERO WORRIES</li>
+                 </ul>
+                 <div class="ticket-quote">
+                    <span>"WE'RE ALWAYS AWAKE."</span>
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=40x40&data=https://wa.me/15551234567" alt="QR" style="width: 32px; height: 32px;">
+                 </div>
+               </div>
+             </div>
+             
+             <div class="ticket-divider"></div>
+             
+             <!-- Ticket Body -->
+             <div class="ticket-main">
+               <div class="ticket-main-header">
+                 <div class="ticket-city">LHR</div>
+                 <div class="ticket-flight-info">
+                   <div>FLIGHT: YS-247</div>
+                   <div>GATE: VIP</div>
+                 </div>
+               </div>
+               
+               <div class="ticket-main-body">
+                 <h2 class="ticket-vertical">SUPPORT</h2>
+                 <div class="ticket-details">
+                   <div class="ticket-detail-item">
+                     <span>HOURS</span>
+                     <strong>24/7</strong>
+                   </div>
+                   <div class="ticket-detail-item">
+                     <span>AGENT</span>
+                     <strong>LIVE</strong>
+                   </div>
+                   <div class="ticket-detail-item">
+                     <span>APP</span>
+                     <strong>WHATSAPP</strong>
+                   </div>
+                   <div class="ticket-detail-item">
+                     <span>RESP</span>
+                     <strong>&lt;1 MIN</strong>
+                   </div>
+                   <div class="ticket-detail-item" style="grid-column: span 2;">
+                     <span>PASSENGER</span>
+                     <strong>XXXXXXXXX</strong>
+                   </div>
+                 </div>
+               </div>
+               
+               <p class="ticket-desc">Need help? Our dedicated WhatsApp support team is always just one message away.</p>
+               <div class="ticket-barcode-bottom">||| || | ||| || ||| | ||</div>
+             </div>
+           </div>
+         </div>
+      </div>
+    </section>
+
+    <!-- How it Works -->
+    <section id="how-it-works" class="section">
+      <h2 class="section-title">How it works</h2>
+      <p class="section-subtitle">Three simple steps to stay connected anywhere in the world.</p>
+      
+      <div class="features-grid">
+         <div class="glass-card" style="text-align: center;">
+           <div class="card-icon">1</div>
+           <h3>Choose a Plan</h3>
+           <p>Select your destination and the data package that fits your travel needs perfectly.</p>
+         </div>
+         <div class="glass-card" style="text-align: center;">
+           <div class="card-icon">2</div>
+           <h3>Scan QR Code</h3>
+           <p>Receive your eSIM details instantly via email and scan the QR code with your phone.</p>
+         </div>
+         <div class="glass-card" style="text-align: center;">
+           <div class="card-icon">3</div>
+           <h3>Get Connected</h3>
+           <p>Activate your eSIM right before you fly, and enjoy seamless internet when you land.</p>
+         </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <img src="assets/logo.png" alt="Yalla Sim Logo" style="height: 40px; margin-bottom: 24px;">
+      <p>&copy; 2026 Yalla Sim. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

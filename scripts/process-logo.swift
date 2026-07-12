@@ -9,8 +9,8 @@ func loadBitmap(from path: String) -> (NSBitmapImageRep, Int, Int)? {
 }
 
 func isOrange(r: CGFloat, g: CGFloat, b: CGFloat) -> Bool {
-    // Keep vibrant orange; drop white / grey JPEG artifacts
-    return r > 0.62 && g > 0.38 && b < 0.42 && r > g && g > b * 1.1
+    // Keep logo orange; drop black / cream JPEG background
+    return r > 0.47 && g > 0.16 && b < 0.59 && r > g && (r - b) > 0.16
 }
 
 func processBitmap(_ source: NSBitmapImageRep, width: Int, height: Int) -> NSBitmapImageRep {
@@ -43,12 +43,12 @@ func processBitmap(_ source: NSBitmapImageRep, width: Int, height: Int) -> NSBit
     return out
 }
 
-func cropLayer(from bitmap: NSBitmapImageRep, width: Int, height: Int, yStart: Int, yEnd: Int) -> NSBitmapImageRep {
-    let layerHeight = yEnd - yStart
+/// Full-canvas layer: same size as logo, only yStart..<yEnd band kept opaque.
+func extractLayer(from bitmap: NSBitmapImageRep, width: Int, height: Int, yStart: Int, yEnd: Int) -> NSBitmapImageRep {
     let out = NSBitmapImageRep(
         bitmapDataPlanes: nil,
         pixelsWide: width,
-        pixelsHigh: layerHeight,
+        pixelsHigh: height,
         bitsPerSample: 8,
         samplesPerPixel: 4,
         hasAlpha: true,
@@ -58,9 +58,19 @@ func cropLayer(from bitmap: NSBitmapImageRep, width: Int, height: Int, yStart: I
         bitsPerPixel: 0
     )!
 
-    for y in 0..<layerHeight {
+    let start = max(0, yStart)
+    let end = min(height, yEnd)
+
+    for y in 0..<height {
         for x in 0..<width {
-            guard let color = bitmap.colorAt(x: x, y: yStart + y) else { continue }
+            if y < start || y >= end {
+                out.setColor(.clear, atX: x, y: y)
+                continue
+            }
+            guard let color = bitmap.colorAt(x: x, y: y) else {
+                out.setColor(.clear, atX: x, y: y)
+                continue
+            }
             var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
             color.getRed(&r, green: &g, blue: &b, alpha: &a)
             if a > 0.05 && isOrange(r: r, g: g, b: b) {
@@ -91,23 +101,26 @@ guard let (bitmap, width, height) = loadBitmap(from: sourcePath) else {
     exit(1)
 }
 
+print("Source: \(sourcePath) (\(width)x\(height))")
+
 let partsDir = "\(root)/assets/parts"
 try? FileManager.default.createDirectory(atPath: partsDir, withIntermediateDirectories: true)
 
 let clean = processBitmap(bitmap, width: width, height: height)
 savePNG(clean, to: "\(root)/assets/logo.png")
 
-// Layer bands tuned to the logo layout (1024×984)
+// Layer bands tuned to logo-source.jpg content (~y 290–640 on 1024×984)
 let layers: [(String, Int, Int)] = [
-    ("dot",   895, 984),
-    ("arc",   800, 910),
-    ("sim",   480, 820),
-    ("yalla",  60, 500),
+    ("dot",   608, 645),
+    ("arc",   555, 612),
+    ("sim",   485, 560),
+    ("yalla", 290, 495),
 ]
 
 for (name, y0, y1) in layers {
-    let layer = cropLayer(from: clean, width: width, height: height, yStart: y0, yEnd: y1)
+    let layer = extractLayer(from: clean, width: width, height: height, yStart: y0, yEnd: y1)
     savePNG(layer, to: "\(partsDir)/\(name).png")
+    print("  wrote \(name).png  band \(y0)-\(y1)")
 }
 
-print("Processed logo + \(layers.count) parts")
+print("Processed logo + \(layers.count) full-canvas parts")

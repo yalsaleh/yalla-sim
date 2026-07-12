@@ -7,17 +7,17 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=title8">
+  <link rel="stylesheet" href="css/style.css?v=splash2">
 </head>
 <body>
 
-  <!-- Intro: dot → line → sim → yalla (bottom to top) -->
+  <!-- Intro: Wi‑Fi logo builds bottom → top -->
   <div id="splash" class="splash">
     <div class="logo-build" aria-hidden="true">
-      <img class="logo-part logo-part--yalla" src="assets/parts/yalla.png?v=5" alt="">
-      <img class="logo-part logo-part--sim" src="assets/parts/sim.png?v=5" alt="">
-      <img class="logo-part logo-part--arc" src="assets/parts/arc.png?v=5" alt="">
-      <img class="logo-part logo-part--dot" src="assets/parts/dot.png?v=5" alt="">
+      <img class="logo-part logo-part--yalla" src="assets/parts/yalla.png?v=8" alt="">
+      <img class="logo-part logo-part--sim" src="assets/parts/sim.png?v=8" alt="">
+      <img class="logo-part logo-part--arc" src="assets/parts/arc.png?v=8" alt="">
+      <img class="logo-part logo-part--dot" src="assets/parts/dot.png?v=8" alt="">
     </div>
   </div>
 
@@ -48,8 +48,25 @@
 
       <div class="hero__showcase">
         <div class="hero__showcase-bg"></div>
-        <div class="tablet-mockup" style="z-index: 1;">
-          <img src="assets/map-screen.png" alt="Yalla Sim Coverage Map" class="tablet-screen-img">
+        <div class="coverage-panel">
+          <div class="coverage-panel__text">
+            <p class="coverage-panel__label">Global coverage</p>
+            <h2 class="coverage-panel__title">Internet in <span>200+</span> countries</h2>
+            <p class="coverage-panel__copy">From Tokyo to Dubai to New York - message us on WhatsApp and get online fast.</p>
+          </div>
+
+          <div class="coverage-panel__map-wrap" aria-hidden="true">
+            <svg id="coverage-map" class="coverage-map" viewBox="0 0 960 480" preserveAspectRatio="xMidYMid meet"></svg>
+          </div>
+
+          <ul class="coverage-panel__regions">
+            <li>Americas</li>
+            <li>Europe</li>
+            <li>Middle East</li>
+            <li>Africa</li>
+            <li>Asia</li>
+            <li>Oceania</li>
+          </ul>
         </div>
       </div>
     </section>
@@ -313,6 +330,6 @@
   </div>
 
   <script src="js/config.js"></script>
-  <script src="js/main.js"></script>
+  <script src="js/main.js?v=splash2"></script>
 </body>
 </html>

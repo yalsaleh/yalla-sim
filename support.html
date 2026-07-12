@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Support — Yalla Sim</title>
+  <title>Contact — Yalla Sim</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=support2">
 </head>
 <body>
 
@@ -15,71 +15,79 @@
     <div class="nav-wrapper">
       <nav class="nav">
         <a href="index.html" class="nav__brand">
-          <img src="assets/logo.png" alt="" class="nav__logo">
-          Yalla Sim
+          <img src="assets/logo.png?v=9" alt="Yalla Sim" class="nav__logo">
         </a>
         <ul class="nav__links">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="about.html">About</a></li>
+          <li><a href="index.html#benefits">Why us</a></li>
+          <li><a href="index.html#how-it-works">How it Works</a></li>
           <li><a href="pricing.html">Pricing</a></li>
-          <li><a href="support.html" class="active">Support</a></li>
+          <li><a href="support.html" class="active">Contact</a></li>
         </ul>
+        <a href="#" data-whatsapp class="nav__cta">Message us &rsaquo;</a>
       </nav>
     </div>
 
-    <div class="container">
-      <header class="page-header">
-        <h1>Support Center</h1>
-        <p>Find answers to common questions, or reach out directly.</p>
+    <section class="support">
+      <header class="support__header">
+        <p class="support__eyebrow">Contact</p>
+        <h1 class="support__title">We're here on WhatsApp</h1>
+        <p class="support__subtitle">Quick answers below — or message us anytime and we'll get you sorted.</p>
       </header>
 
-      <div class="content">
-        <h2>Frequently asked questions</h2>
+      <div class="support__layout">
+        <div class="support__faqs">
+          <h2 class="support__section-title">Common questions</h2>
 
-        <details class="faq-item">
-          <summary>How does Yalla Sim work?</summary>
-          <p>Message us on WhatsApp. Tell us where you are (or where you’re going) and for how long you need internet. We’ll get you connected quickly — no app to download.</p>
-        </details>
+          <details class="faq-item">
+            <summary>How does Yalla Sim work?</summary>
+            <p>Message us on WhatsApp. Tell us where you need internet and for how long. We'll get you connected quickly — no app to download.</p>
+          </details>
 
-        <details class="faq-item">
-          <summary>Is there an app?</summary>
-          <p>No. We’re just a WhatsApp number. Everything happens in the chat.</p>
-        </details>
+          <details class="faq-item">
+            <summary>Is there an app?</summary>
+            <p>No. We're just a WhatsApp number. Everything happens in the chat.</p>
+          </details>
 
-        <details class="faq-item">
-          <summary>What do I need to tell you?</summary>
-          <p>Where you need internet and for how long. That’s enough for us to get you sorted.</p>
-        </details>
+          <details class="faq-item">
+            <summary>What do I need to tell you?</summary>
+            <p>Where you need internet and for how long. That's enough for us to get you sorted.</p>
+          </details>
 
-        <details class="faq-item">
-          <summary>How fast will I get online?</summary>
-          <p>We aim to get you internet access very quickly after you confirm your location and duration in WhatsApp.</p>
-        </details>
+          <details class="faq-item">
+            <summary>How fast will I get online?</summary>
+            <p>We aim to get you online very quickly after you confirm your destination and duration in WhatsApp.</p>
+          </details>
 
-        <details class="faq-item">
-          <summary>How much does it cost?</summary>
-          <p>We keep pricing fair and clear. Message us with your destination and dates and we’ll share options that fit your trip.</p>
-        </details>
+          <details class="faq-item">
+            <summary>How much does it cost?</summary>
+            <p>We keep pricing fair and clear. Message us with your destination and dates and we'll share options that fit your trip — or check the pricing page first.</p>
+          </details>
 
-        <details class="faq-item">
-          <summary>Do I need WhatsApp installed?</summary>
-          <p>Yes on mobile — the link opens WhatsApp. On desktop it can open WhatsApp Web if you’re logged in.</p>
-        </details>
-
-        <div class="support-cta">
-          <p>Didn't find what you're looking for?</p>
-          <a data-whatsapp class="btn-whatsapp" href="#" target="_blank" rel="noopener noreferrer">
-            <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.881 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-            </svg>
-            Chat on WhatsApp
-          </a>
+          <details class="faq-item">
+            <summary>Do I need WhatsApp installed?</summary>
+            <p>Yes on mobile — the link opens WhatsApp. On desktop it can open WhatsApp Web if you're logged in.</p>
+          </details>
         </div>
+
+        <aside class="support__card">
+          <p class="support__card-label">Still need help?</p>
+          <h2 class="support__card-title">Message us on WhatsApp</h2>
+          <p class="support__card-copy">Tell us where you're going and for how long. We'll reply with a clear plan.</p>
+          <a data-whatsapp class="btn-primary support__card-cta" href="#" target="_blank" rel="noopener noreferrer">
+            Start on WhatsApp &rsaquo;
+          </a>
+          <a href="pricing.html" class="support__card-link">See pricing first</a>
+        </aside>
       </div>
-    </div>
+    </section>
+
+    <footer class="footer">
+      <img src="assets/logo.png?v=9" alt="Yalla Sim Logo" style="height: 40px; margin-bottom: 24px;">
+      <p>&copy; 2026 Yalla Sim. All rights reserved.</p>
+    </footer>
   </div>
 
   <script src="js/config.js"></script>
-  <script src="js/main.js"></script>
+  <script src="js/main.js?v=support2"></script>
 </body>
 </html>

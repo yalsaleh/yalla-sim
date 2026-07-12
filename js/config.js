@@ -1,6 +1,6 @@
-// Update this with your WhatsApp number (country code, no + or spaces)
-// Example: US number +1 555 123 4567 → "15551234567"
-const WHATSAPP_NUMBER = "15551234567";
+// WhatsApp number (country code, no + or spaces)
+// +965 5092 0045 → "96550920045"
+const WHATSAPP_NUMBER = "96550920045";
 
 // Optional pre-filled message when opening chat
 const WHATSAPP_MESSAGE = "Hello! I'd like to get in touch.";

@@ -103,42 +103,95 @@ body {
 
 .logo-build {
   position: relative;
-  width: min(260px, 62vw);
+  width: min(280px, 68vw);
   aspect-ratio: 1024 / 984;
 }
 
-.logo-build .logo-part {
-  position: absolute;
-  inset: 0;
+.logo-build__mark {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: contain;
-  opacity: 0;
-  /* Fade/scale in place — no slide, so curved layers never wipe through each other */
-  transform: scale(0.94);
-  transition:
-    opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform;
   pointer-events: none;
+  opacity: 0;
+  transform: scale(0.92);
+  /* Expand from the Wi‑Fi origin (bottom of the arcs) — not a blocky crop */
+  -webkit-mask-image: radial-gradient(
+    circle at 50% 66%,
+    #000 0%,
+    #000 42%,
+    transparent 70%
+  );
+  mask-image: radial-gradient(
+    circle at 50% 66%,
+    #000 0%,
+    #000 42%,
+    transparent 70%
+  );
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: 50% 66%;
+  mask-position: 50% 66%;
+  -webkit-mask-size: 0% 0%;
+  mask-size: 0% 0%;
+  will-change: mask-size, -webkit-mask-size, opacity, transform;
 }
 
-.logo-build .logo-part.show {
-  opacity: 1;
-  transform: scale(1);
+.logo-build.is-charging .logo-build__mark {
+  animation:
+    wifi-charge-mask 2.4s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+    wifi-charge-soft 2.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-.logo-build .logo-part--dot.show {
-  transition-duration: 0.5s, 0.55s;
+@keyframes wifi-charge-mask {
+  0% {
+    -webkit-mask-size: 0% 0%;
+    mask-size: 0% 0%;
+  }
+  /* Dot */
+  18% {
+    -webkit-mask-size: 14% 14%;
+    mask-size: 14% 14%;
+  }
+  /* First arc */
+  38% {
+    -webkit-mask-size: 32% 32%;
+    mask-size: 32% 32%;
+  }
+  /* Outer arcs / SIM */
+  62% {
+    -webkit-mask-size: 58% 58%;
+    mask-size: 58% 58%;
+  }
+  /* Full mark including yalla */
+  100% {
+    -webkit-mask-size: 160% 160%;
+    mask-size: 160% 160%;
+  }
 }
-.logo-build .logo-part--arc.show {
-  transition-duration: 0.55s, 0.6s;
+
+@keyframes wifi-charge-soft {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  12% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
-.logo-build .logo-part--sim.show {
-  transition-duration: 0.6s, 0.65s;
-}
-.logo-build .logo-part--yalla.show {
-  transition-duration: 0.65s, 0.7s;
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-build.is-charging .logo-build__mark {
+    animation: none;
+    opacity: 1;
+    transform: none;
+    -webkit-mask-size: 200% 200%;
+    mask-size: 200% 200%;
+  }
 }
 
 /* ── Layout ── */

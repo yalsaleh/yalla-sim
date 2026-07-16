@@ -17,30 +17,27 @@ function initWhatsAppLinks() {
 function initSplash() {
   const splash = document.getElementById("splash");
   const page = document.getElementById("page");
+  const build = splash?.querySelector(".logo-build");
 
   if (!splash || !page) {
     document.dispatchEvent(new CustomEvent("yalla:ready"));
     return;
   }
 
-  // Bottom → top: whole curved pieces fade in (dot → arc → sim → yalla).
-  // Stagger enough that each layer is mostly visible before the next starts.
-  const sequence = [
-    { sel: ".logo-part--dot",   delay: 200 },
-    { sel: ".logo-part--arc",   delay: 750 },
-    { sel: ".logo-part--sim",   delay: 1350 },
-    { sel: ".logo-part--yalla", delay: 2000 },
-  ];
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  sequence.forEach(({ sel, delay }) => {
-    setTimeout(() => splash.querySelector(sel)?.classList.add("show"), delay);
+  // Wi‑Fi charge: one radial mask expands from the signal origin
+  requestAnimationFrame(() => {
+    build?.classList.add("is-charging");
   });
+
+  const hold = reduceMotion ? 700 : 2800;
 
   setTimeout(() => {
     splash.classList.add("hidden");
     page.classList.add("visible");
     document.dispatchEvent(new CustomEvent("yalla:ready"));
-  }, 3400);
+  }, hold);
 }
 
 function revealItemsIn(root) {

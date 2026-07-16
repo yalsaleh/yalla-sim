@@ -144,6 +144,7 @@ body {
 /* ── Layout ── */
 
 .page {
+  position: relative;
   opacity: 0;
   transform: translateY(15px);
   transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s;
@@ -153,6 +154,29 @@ body {
   opacity: 1;
   /* none — translateY(0) still creates a containing block that clips glyph tops with body overflow-x:hidden */
   transform: none;
+}
+
+/* Full-page orange wash — sits behind content, stretches to the footer */
+.page-wash {
+  position: absolute;
+  top: 52vh;
+  left: 50%;
+  bottom: 0;
+  width: min(1400px, 130vw);
+  z-index: 0;
+  pointer-events: none;
+  transform: translate3d(-50%, 0, 0);
+  transform-origin: top center;
+  border-radius: 48px 48px 0 0;
+  background: linear-gradient(
+    180deg,
+    var(--orange-light) 0%,
+    var(--orange) 28%,
+    rgba(255, 152, 0, 0.72) 62%,
+    rgba(255, 152, 0, 0.28) 100%
+  );
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
 .container {
@@ -250,7 +274,7 @@ body {
 
 .hero {
   position: relative;
-  z-index: 2;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -322,25 +346,6 @@ body {
   max-width: 800px;
   display: flex;
   justify-content: center;
-  /* keep overflow visible so the expanding orange wash stays on screen */
-  overflow: visible;
-}
-
-.hero__showcase-bg {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 120%;
-  height: 90%;
-  background: radial-gradient(circle at top, var(--orange-light) 0%, var(--orange) 100%);
-  border-radius: 40px 40px 0 0;
-  z-index: 0;
-  opacity: 1;
-  transform: translate3d(-50%, -40%, 0);
-  transform-origin: center top;
-  will-change: transform;
-  pointer-events: none; /* overflows over the hero CTA — don't steal taps on mobile */
-  backface-visibility: hidden;
 }
 
 .tablet-mockup,
@@ -509,7 +514,7 @@ body {
   margin: 0 auto;
   text-align: center;
   position: relative;
-  z-index: 2;
+  z-index: 1;
 }
 
 .section-title {
@@ -1050,6 +1055,8 @@ body {
 
 /* ── Footer ── */
 .footer {
+  position: relative;
+  z-index: 1;
   padding: 80px 24px 40px;
   text-align: center;
   border-top: 1px solid rgba(0,0,0,0.05);
@@ -1626,10 +1633,12 @@ body {
   .content {
     padding: 32px 24px;
   }
-  .hero__showcase-bg {
+
+  .page-wash {
     width: 100vw;
-    border-radius: 20px 20px 0 0;
+    border-radius: 28px 28px 0 0;
   }
+
   .pricing {
     padding-top: 110px;
   }

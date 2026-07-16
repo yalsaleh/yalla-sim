@@ -116,8 +116,10 @@ function initScrollReveal() {
 }
 
 function initSmoothAnimation() {
-  const bg = document.querySelector(".hero__showcase-bg");
-  if (!bg) return;
+  const wash = document.querySelector(".page-wash");
+  const page = document.getElementById("page");
+  const showcase = document.querySelector(".hero__showcase");
+  if (!wash || !page) return;
 
   let targetMouseX = 0;
   let targetMouseY = 0;
@@ -126,6 +128,13 @@ function initSmoothAnimation() {
   let latestScrollY = window.scrollY;
   let rafId = 0;
   let needsFrame = true;
+
+  const syncWashTop = () => {
+    if (!showcase) return;
+    const pageTop = page.getBoundingClientRect().top + window.scrollY;
+    const showTop = showcase.getBoundingClientRect().top + window.scrollY;
+    wash.style.top = `${Math.max(0, showTop - pageTop - 24)}px`;
+  };
 
   const queueFrame = () => {
     if (rafId) return;
@@ -136,6 +145,16 @@ function initSmoothAnimation() {
     "scroll",
     () => {
       latestScrollY = window.scrollY;
+      needsFrame = true;
+      queueFrame();
+    },
+    { passive: true }
+  );
+
+  window.addEventListener(
+    "resize",
+    () => {
+      syncWashTop();
       needsFrame = true;
       queueFrame();
     },
@@ -159,11 +178,18 @@ function initSmoothAnimation() {
     currentMouseX += (targetMouseX - currentMouseX) * 0.1;
     currentMouseY += (targetMouseY - currentMouseY) * 0.1;
 
-    const scrollScale = Math.min(1 + latestScrollY * 0.012, 3.2);
-    const shiftX = currentMouseX * 4;
-    const shiftY = currentMouseY * 4;
+    const maxScroll = Math.max(
+      1,
+      document.documentElement.scrollHeight - window.innerHeight
+    );
+    const t = Math.min(1, latestScrollY / maxScroll);
+    // Widen + slight vertical settle as you scroll the full page
+    const scaleX = 1 + t * 0.22;
+    const scaleY = 1 + t * 0.04;
+    const shiftX = currentMouseX * 3;
+    const shiftY = currentMouseY * 2;
 
-    bg.style.transform = `translate3d(calc(-50% + ${shiftX}%), calc(-40% + ${shiftY}%), 0) scale(${scrollScale})`;
+    wash.style.transform = `translate3d(calc(-50% + ${shiftX}%), ${shiftY}px, 0) scale(${scaleX}, ${scaleY})`;
 
     const stillEasing =
       Math.abs(targetMouseX - currentMouseX) > 0.001 ||
@@ -175,6 +201,9 @@ function initSmoothAnimation() {
     }
   }
 
+  syncWashTop();
+  // After splash / fonts, top can shift — resync once ready
+  document.addEventListener("yalla:ready", syncWashTop, { once: true });
   queueFrame();
 }
 

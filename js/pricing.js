@@ -124,7 +124,7 @@ function initPricingPage() {
     const rate = dailyRateFor(country);
     const price = calcPrice(country, days);
     priceEl.textContent = formatMoney(price);
-    rateEl.textContent = `${formatMoney(rate)} / day`;
+    rateEl.textContent = `${formatMoney(rate)} per day`;
     summaryEl.textContent = `${country} · ${days} day${days === 1 ? "" : "s"}`;
     cta.href = getWhatsAppUrlForSelection(country, days, price);
     cta.classList.remove("is-disabled");

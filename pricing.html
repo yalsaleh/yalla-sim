@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=daysbox1">
+  <link rel="stylesheet" href="css/style.css?v=priceclean1">
 </head>
 <body>
 
@@ -34,14 +34,14 @@
         <header class="pricing__header">
           <p class="pricing__eyebrow">Pricing</p>
           <h1 class="pricing__title">Fair rates for your trip</h1>
-          <p class="pricing__subtitle">Pick a country and how long you need internet. Get an estimate, then confirm on WhatsApp — no app required.</p>
+          <p class="pricing__subtitle">Choose a country and how many days you need. Confirm the estimate on WhatsApp — no app required.</p>
         </header>
 
-        <div class="pricing__layout">
+        <div class="pricing__stage">
           <div class="pricing__map">
             <div class="pricing__map-head">
-              <p class="pricing__map-label">Coverage map</p>
-              <p class="pricing__map-hint" id="map-hint">Tap a country to price your trip</p>
+              <p class="pricing__map-label">Tap the map</p>
+              <p class="pricing__map-hint" id="map-hint">Select a country</p>
             </div>
             <div class="pricing__map-stage">
               <svg id="world-map" class="world-map" role="img" aria-label="World map"></svg>
@@ -49,10 +49,7 @@
           </div>
 
           <aside class="pricing__panel">
-            <div class="pricing__panel-head">
-              <h2 class="pricing__panel-title">Your estimate</h2>
-              <p class="pricing__panel-copy">Search, select, set your days.</p>
-            </div>
+            <h2 class="pricing__panel-title">Your estimate</h2>
 
             <label class="pricing-field">
               <span class="pricing-field__label">Search</span>
@@ -76,26 +73,26 @@
                 max="365"
                 value="7"
                 inputmode="numeric"
-                placeholder="Enter days (1–365)"
+                placeholder="1–365"
                 autocomplete="off"
               >
               <input type="range" id="days-input" class="pricing-range" min="1" max="365" value="7" aria-label="Days slider">
               <div class="pricing-range-hints">
-                <span>1 day</span>
-                <span>365 days</span>
+                <span>1</span>
+                <span>365</span>
               </div>
             </label>
 
             <div class="pricing-quote">
-              <p class="pricing-quote__label" id="price-summary">Pick a country and trip length to see your estimate.</p>
+              <p class="pricing-quote__label" id="price-summary">Pick a country to see your estimate</p>
               <p class="pricing-quote__price" id="price-value">—</p>
-              <p class="pricing-quote__rate">Daily rate: <span id="rate-value">—</span></p>
-              <p class="pricing-quote__note">Estimate only — final price confirmed on WhatsApp.</p>
+              <p class="pricing-quote__rate"><span id="rate-value">—</span></p>
             </div>
 
             <a id="pricing-cta" class="btn-primary pricing-cta is-disabled" href="https://wa.me/96550920045" target="_blank" rel="noopener noreferrer">
               Confirm on WhatsApp &rsaquo;
             </a>
+            <p class="pricing-quote__note">Estimate only — final price confirmed in chat.</p>
           </aside>
         </div>
       </section>
@@ -108,7 +105,7 @@
   </div>
 
   <script src="js/config.js?v=965"></script>
-  <script src="js/main.js?v=splash3"></script>
-  <script src="js/pricing.js?v=6"></script>
+  <script src="js/main.js?v=priceclean1"></script>
+  <script src="js/pricing.js?v=7"></script>
 </body>
 </html>

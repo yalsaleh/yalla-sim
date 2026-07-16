@@ -45,8 +45,6 @@ function revealItemsIn(root) {
     ...(root.matches?.("[data-reveal]") ? [root] : []),
     ...root.querySelectorAll("[data-reveal]"),
   ];
-  items.forEach((el) => el.classList.remove("is-in"));
-  void root.offsetWidth;
   requestAnimationFrame(() => {
     items.forEach((el) => el.classList.add("is-in"));
   });
@@ -63,22 +61,18 @@ function initScrollReveal() {
     return;
   }
 
-  let navLockUntil = 0;
-
+  // One-shot reveals: never toggle off while scrolling (that stalls glide / causes jank)
   const observer = new IntersectionObserver(
-    (entries) => {
+    (entries, obs) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-in");
-        } else if (Date.now() > navLockUntil) {
-          // Leave view → reset so scrolling back up replays the reveal
-          entry.target.classList.remove("is-in");
-        }
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-in");
+        obs.unobserve(entry.target);
       });
     },
     {
-      threshold: 0.12,
-      rootMargin: "0px 0px -6% 0px",
+      threshold: 0.08,
+      rootMargin: "0px 0px -4% 0px",
     }
   );
 
@@ -92,19 +86,16 @@ function initScrollReveal() {
       if (!section) return;
 
       e.preventDefault();
-      navLockUntil = Date.now() + 1200;
       revealItemsIn(section);
       section.scrollIntoView({ behavior: "smooth", block: "start" });
       history.pushState(null, "", hash);
     });
   });
 
-  // Deep link e.g. index.html#benefits after splash
   if (location.hash) {
     const section = document.querySelector(location.hash);
     if (section) {
       setTimeout(() => {
-        navLockUntil = Date.now() + 1200;
         revealItemsIn(section);
         section.scrollIntoView({ behavior: "smooth", block: "start" });
       }, 60);
@@ -116,97 +107,22 @@ function initSmoothAnimation() {
   const wash = document.querySelector(".page-wash");
   const page = document.getElementById("page");
   const showcase = document.querySelector(".hero__showcase");
-  const footer = document.querySelector(".footer");
   if (!wash || !page) return;
 
-  let targetMouseX = 0;
-  let currentMouseX = 0;
-  let latestScrollY = window.scrollY;
-  let rafId = 0;
-  let needsFrame = true;
+  // Bottom is CSS (0) — solid footer background masks orange at the border line.
+  wash.style.transform = "";
+  wash.style.bottom = "0";
 
-  const syncWashBounds = () => {
-    const pageTop = page.getBoundingClientRect().top + window.scrollY;
-    const pageHeight = page.offsetHeight;
-
-    if (showcase) {
-      const showTop = showcase.getBoundingClientRect().top + window.scrollY;
-      wash.style.top = `${Math.max(0, showTop - pageTop - 24)}px`;
-    }
-
-    if (footer) {
-      // Stop exactly at the footer rule (line above the logo)
-      const footerTop = footer.getBoundingClientRect().top + window.scrollY;
-      const bottom = Math.max(0, pageHeight - (footerTop - pageTop));
-      wash.style.bottom = `${bottom}px`;
-    }
+  const syncWashTop = () => {
+    if (!showcase) return;
+    // offsetTop is relative to .page (positioned ancestor)
+    wash.style.top = `${Math.max(0, showcase.offsetTop - 24)}px`;
   };
 
-  const queueFrame = () => {
-    if (rafId) return;
-    rafId = requestAnimationFrame(animate);
-  };
-
-  window.addEventListener(
-    "scroll",
-    () => {
-      latestScrollY = window.scrollY;
-      needsFrame = true;
-      queueFrame();
-    },
-    { passive: true }
-  );
-
-  window.addEventListener(
-    "resize",
-    () => {
-      syncWashBounds();
-      needsFrame = true;
-      queueFrame();
-    },
-    { passive: true }
-  );
-
-  document.addEventListener(
-    "mousemove",
-    (e) => {
-      targetMouseX = e.clientX / window.innerWidth - 0.5;
-      needsFrame = true;
-      queueFrame();
-    },
-    { passive: true }
-  );
-
-  function animate() {
-    rafId = 0;
-
-    currentMouseX += (targetMouseX - currentMouseX) * 0.1;
-
-    const maxScroll = Math.max(
-      1,
-      document.documentElement.scrollHeight - window.innerHeight
-    );
-    const t = Math.min(1, latestScrollY / maxScroll);
-    // Widen only — keep bottom edge pinned to the footer line
-    const scaleX = 1 + t * 0.22;
-    const shiftX = currentMouseX * 3;
-
-    wash.style.transform = `translate3d(calc(-50% + ${shiftX}%), 0, 0) scaleX(${scaleX})`;
-
-    const stillEasing = Math.abs(targetMouseX - currentMouseX) > 0.001;
-
-    if (stillEasing || needsFrame) {
-      needsFrame = stillEasing;
-      queueFrame();
-    }
-  }
-
-  syncWashBounds();
-  document.addEventListener("yalla:ready", syncWashBounds, { once: true });
-  // Re-measure after layout/fonts settle
-  setTimeout(syncWashBounds, 100);
-  setTimeout(syncWashBounds, 800);
-  queueFrame();
+  syncWashTop();
+  document.addEventListener("yalla:ready", syncWashTop, { once: true });
+  window.addEventListener("load", syncWashTop, { once: true, passive: true });
+  window.addEventListener("resize", syncWashTop, { passive: true });
 }
 
 function loadScript(src) {

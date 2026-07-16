@@ -36,6 +36,11 @@
 
 html {
   scroll-behavior: smooth;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  /* Keep layout width equal for fixed nav + in-flow content (avoids slight left shift) */
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -44,26 +49,30 @@ body {
   color: var(--text);
   line-height: 1.6;
   min-height: 100vh;
-  /* Avoid overflow-x clip/hidden on body — both clip glyph descenders (y, g, p) in WebKit/Blink */
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
+  touch-action: pan-y;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ── Scroll reveals (opacity + translate only — no blur/filter for smooth scroll) ── */
+/* ── Scroll reveals (one-shot — never reset on scroll-out; that kills momentum) ── */
 
 [data-reveal] {
   --d: 0s;
   opacity: 0;
-  transform: translate3d(0, 28px, 0);
-  transition: none; /* instant reset when leaving view */
+  transform: translate3d(0, 16px, 0);
 }
 
 [data-reveal].is-in {
   opacity: 1;
   transform: translate3d(0, 0, 0);
   transition:
-    opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
   transition-delay: var(--d);
 }
 
@@ -79,6 +88,11 @@ body {
     opacity: 1;
     transform: none;
     animation: none !important;
+  }
+
+  .coverage-map__pin-pulse {
+    animation: none;
+    opacity: 0.35;
   }
 }
 
@@ -199,27 +213,30 @@ body {
 .page {
   position: relative;
   opacity: 0;
-  transform: translateY(15px);
-  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s;
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s;
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
+  margin-inline: auto;
 }
 
 .page.visible {
   opacity: 1;
-  /* none — translateY(0) still creates a containing block that clips glyph tops with body overflow-x:hidden */
-  transform: none;
 }
 
-/* Orange wash — behind content, ends at the footer rule above the logo */
+/* Orange wash — runs under the page; solid footer bg clips it at the border line.
+   No transforms — those expand scrollWidth and enable sideways swipe. */
 .page-wash {
   position: absolute;
-  top: 52vh;
-  left: 50%;
-  bottom: 220px; /* fallback until JS pins it to the footer border */
-  width: min(1400px, 130vw);
+  top: 52vh; /* refined once by JS to the showcase */
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: auto;
+  max-width: min(1400px, 100%);
+  margin-inline: auto;
   z-index: 0;
   pointer-events: none;
-  transform: translate3d(-50%, 0, 0);
-  transform-origin: top center;
   border-radius: 48px 48px 0 0;
   background: linear-gradient(
     180deg,
@@ -228,8 +245,6 @@ body {
     rgba(255, 152, 0, 0.72) 62%,
     rgba(255, 152, 0, 0.35) 100%
   );
-  will-change: transform;
-  backface-visibility: hidden;
 }
 
 .container {
@@ -244,11 +259,14 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
+  right: 0;
+  width: auto;
+  max-width: 100%;
   padding: 14px 18px;
   z-index: 100;
   display: flex;
   justify-content: center;
+  box-sizing: border-box;
 }
 
 .nav {
@@ -346,9 +364,11 @@ body {
   text-align: center;
   padding: 160px 24px 80px; 
   max-width: 1000px;
+  width: 100%;
   margin: 0 auto;
   min-height: 100vh;
   justify-content: center;
+  box-sizing: border-box;
 }
 
 .hero > .btn-primary {
@@ -374,7 +394,8 @@ body {
   font-size: clamp(1rem, 2.5vw, 1.15rem);
   font-weight: 400;
   max-width: 600px;
-  margin-bottom: 40px;
+  width: 100%;
+  margin: 0 auto 40px;
   line-height: 1.6;
 }
 
@@ -495,7 +516,7 @@ body {
 .coverage-map__pin-pulse {
   transform-origin: center;
   transform-box: fill-box;
-  animation: coverage-pulse 2.4s ease-out infinite;
+  animation: coverage-pulse 3.2s ease-out infinite;
 }
 
 .coverage-map__pin:nth-child(1) .coverage-map__pin-pulse { animation-delay: 0s; }
@@ -576,10 +597,12 @@ body {
 .section {
   padding: 120px 24px;
   max-width: 1200px;
+  width: 100%;
   margin: 0 auto;
   text-align: center;
   position: relative;
   z-index: 1;
+  box-sizing: border-box;
 }
 
 .section-title {
@@ -644,14 +667,23 @@ body {
 
 /* ── Flight Ticket Cards ── */
 .features-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
   gap: 32px;
-  margin-top: 40px;
+  margin: 40px auto 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .flight-ticket {
   position: relative;
+  flex: 0 1 340px;
+  width: min(100%, 360px);
+  max-width: 360px;
+  box-sizing: border-box;
   background: #fdfdfd; /* Off-white paper look */
   border-radius: 12px;
   box-shadow: 0 20px 40px rgba(0,0,0,0.08);
@@ -875,11 +907,13 @@ body {
 
 .how-stage {
   display: grid;
-  grid-template-columns: minmax(280px, 380px) 1fr;
+  grid-template-columns: minmax(0, 380px) minmax(0, 1fr);
   gap: 48px;
   align-items: center;
   text-align: left;
   margin-top: 8px;
+  width: 100%;
+  max-width: 100%;
 }
 
 .how-chat {
@@ -1059,13 +1093,20 @@ body {
 
 @media (max-width: 860px) {
   .how-stage {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 32px;
+    justify-items: center;
   }
 
-  .how-chat {
+  .how-chat,
+  .how-steps {
     max-width: 420px;
+    width: 100%;
     margin: 0 auto;
+  }
+
+  .how-steps {
+    padding-inline: 22px;
   }
 }
 
@@ -1124,8 +1165,12 @@ body {
   z-index: 1;
   padding: 80px 24px 40px;
   text-align: center;
-  border-top: 1px solid rgba(0,0,0,0.05);
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
   margin-top: 80px;
+  width: 100%;
+  box-sizing: border-box;
+  /* Covers the wash so orange ends exactly on this top border */
+  background: var(--bg);
 }
 
 .footer__logo {
@@ -1707,8 +1752,40 @@ body {
   }
 
   .page-wash {
-    width: 100vw;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    max-width: none;
+    margin-inline: 0;
     border-radius: 28px 28px 0 0;
+  }
+
+  /* Lighter blur on mobile — heavy backdrop-filter stalls scroll */
+  .nav,
+  .coverage-panel,
+  .how-steps,
+  .tablet-mockup {
+    backdrop-filter: blur(10px) saturate(140%);
+    -webkit-backdrop-filter: blur(10px) saturate(140%);
+  }
+
+  .section {
+    padding: 88px 20px;
+  }
+
+  .features-grid {
+    gap: 24px;
+  }
+
+  .flight-ticket {
+    flex: 0 1 100%;
+    width: min(100%, 400px);
+    max-width: 400px;
+  }
+
+  .how-step:hover {
+    transform: none;
   }
 
   .pricing {

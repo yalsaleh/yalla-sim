@@ -86,15 +86,19 @@ function initPricingPage() {
   let selectedId = null;
   let countryById = new Map();
   let pathById = new Map();
+  let allCountries = [];
 
   function updateUI() {
     const option = countrySelect.selectedOptions[0];
-    const country = option?.dataset.name || option?.textContent || "";
+    const fromSelect =
+      countrySelect.value && (option?.dataset.name || option?.textContent || "");
+    const fromMap = selectedId ? countryById.get(selectedId)?.name || "" : "";
+    const country = fromSelect || fromMap;
     const days = Math.max(1, Math.min(90, Number(daysInput.value) || 1));
     daysInput.value = String(days);
     daysValue.textContent = String(days);
 
-    if (!country || countrySelect.value === "") {
+    if (!country) {
       priceEl.textContent = "—";
       rateEl.textContent = "—";
       summaryEl.textContent = "Pick a country and trip length to see your estimate.";
@@ -138,27 +142,67 @@ function initPricingPage() {
     updateUI();
   }
 
-  function filterCountries(query) {
+  function rebuildCountrySelect(query = "") {
     const q = query.trim().toLowerCase();
-    Array.from(countrySelect.options).forEach((opt, i) => {
-      if (i === 0) return;
-      const match = !q || opt.textContent.toLowerCase().includes(q);
-      opt.hidden = !match;
+    const matches = q
+      ? allCountries.filter((c) => c.name.toLowerCase().includes(q))
+      : allCountries;
+
+    const previous = countrySelect.value;
+    countrySelect.innerHTML = "";
+
+    const placeholder = document.createElement("option");
+    placeholder.value = "";
+    placeholder.textContent = matches.length
+      ? "Select a country…"
+      : "No countries match";
+    countrySelect.appendChild(placeholder);
+
+    matches.forEach(({ id, name }) => {
+      const opt = document.createElement("option");
+      opt.value = id;
+      opt.textContent = name;
+      opt.dataset.name = name;
+      countrySelect.appendChild(opt);
     });
+
+    if (previous && matches.some((c) => c.id === previous)) {
+      countrySelect.value = previous;
+    } else if (q && matches.length === 1) {
+      selectCountryById(matches[0].id);
+      return;
+    } else if (previous && !matches.some((c) => c.id === previous)) {
+      // Keep map/price for the current pick even if it's filtered out of the list
+      countrySelect.value = "";
+    }
+
+    updateUI();
   }
 
   countrySelect.addEventListener("change", () => {
     const id = countrySelect.value;
     if (id) highlightCountry(id);
     else {
-      pathById.forEach((path) => path.classList.remove("is-selected"));
+      pathById.forEach((pathEl) => {
+        pathEl.classList.remove("is-selected");
+        pathEl.setAttribute("fill", "#e8dfd4");
+        pathEl.setAttribute("stroke", "#fffaf6");
+        pathEl.setAttribute("stroke-width", "0.6");
+      });
       selectedId = null;
     }
     updateUI();
   });
 
   daysInput.addEventListener("input", updateUI);
-  searchInput?.addEventListener("input", (e) => filterCountries(e.target.value));
+  searchInput?.addEventListener("input", (e) => rebuildCountrySelect(e.target.value));
+  searchInput?.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const first = countrySelect.options[1];
+      if (first?.value) selectCountryById(first.value);
+    }
+  });
 
   cta.addEventListener("click", (e) => {
     if (cta.classList.contains("is-disabled")) e.preventDefault();
@@ -193,19 +237,15 @@ function initPricingPage() {
         (a.properties.name || "").localeCompare(b.properties.name || "")
       );
 
-      countrySelect.innerHTML = `<option value="">Select a country…</option>`;
-
       sorted.forEach((feature) => {
         const id = String(feature.id);
         const name = feature.properties.name || `Country ${id}`;
-        countryById.set(id, { id, name });
-
-        const opt = document.createElement("option");
-        opt.value = id;
-        opt.textContent = name;
-        opt.dataset.name = name;
-        countrySelect.appendChild(opt);
+        const info = { id, name };
+        countryById.set(id, info);
+        allCountries.push(info);
       });
+
+      rebuildCountrySelect("");
 
       g.selectAll("path")
         .data(countries.features)

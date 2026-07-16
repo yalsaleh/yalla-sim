@@ -1015,9 +1015,9 @@ body {
 
 .footer__logo {
   display: block;
-  height: 72px;
+  height: 128px;
   width: auto;
-  margin: 0 auto 24px;
+  margin: 0 auto 28px;
 }
 
 .footer p {
@@ -1542,7 +1542,7 @@ body {
   }
 
   .footer__logo {
-    height: 64px;
+    height: 112px;
   }
 
   .nav__cta {

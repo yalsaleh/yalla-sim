@@ -224,16 +224,18 @@ body {
 }
 
 .nav__logo {
-  width: 56px;
+  /* Tight-cropped mark (logo-nav.png) — size is real orange, not empty padding */
+  width: 48px;
   height: auto;
   display: block;
-  margin-top: -10px;
-  opacity: 0.72;
+  margin-top: -8px;
+  margin-bottom: -8px;
+  opacity: 0.78;
   transition: opacity 0.2s ease;
 }
 
 .nav__brand:hover .nav__logo {
-  opacity: 0.95;
+  opacity: 1;
 }
 
 .nav__links {
@@ -1598,13 +1600,14 @@ body {
   }
 
   .nav__brand {
-    height: 24px;
+    height: 22px;
   }
 
   .nav__logo {
-    width: 46px;
+    width: 42px;
     margin-top: -8px;
-    opacity: 0.65;
+    margin-bottom: -8px;
+    opacity: 0.72;
   }
 
   .footer__logo {

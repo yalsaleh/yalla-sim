@@ -186,6 +186,10 @@ body {
   opacity: 0.7;
 }
 
+.nav__short {
+  display: none;
+}
+
 .nav__cta {
   display: inline-block;
   background: linear-gradient(135deg, rgba(255, 152, 0, 0.8) 0%, rgba(255, 152, 0, 0.95) 100%);
@@ -1514,15 +1518,24 @@ body {
 
 @media (max-width: 768px) {
   .nav-wrapper {
-    padding: 16px;
+    padding: 10px 12px;
   }
 
   .nav {
     flex-wrap: wrap;
     align-items: center;
-    gap: 10px 12px;
-    padding: 12px 14px;
-    border-radius: 28px;
+    gap: 6px 10px;
+    padding: 8px 10px;
+    border-radius: 22px;
+  }
+
+  .nav__logo {
+    width: 34px;
+  }
+
+  .nav__cta {
+    padding: 7px 12px;
+    font-size: 0.78rem;
   }
 
   .nav__links {
@@ -1530,23 +1543,29 @@ body {
     order: 3;
     width: 100%;
     justify-content: space-between;
-    gap: 6px;
+    gap: 4px;
     margin: 0;
-    padding: 2px 2px 0;
+    padding: 6px 2px 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
   }
 
   .nav__links a {
-    font-size: 0.8rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
     white-space: nowrap;
   }
 
-  .nav__cta {
-    padding: 10px 14px;
-    font-size: 0.85rem;
+  .nav__full {
+    display: none;
   }
 
-  .nav__logo {
-    width: 44px;
+  .nav__short {
+    display: inline;
+  }
+
+  .hero {
+    padding-top: 120px;
   }
 
   .content {
@@ -1557,6 +1576,6 @@ body {
     border-radius: 20px 20px 0 0;
   }
   .pricing {
-    padding-top: 120px;
+    padding-top: 110px;
   }
 }

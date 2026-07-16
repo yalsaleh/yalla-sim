@@ -26,13 +26,13 @@ function initSplash() {
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  // Wi‑Fi charge: quick radial expand from the signal origin
+  // Fast continuous charge, then hold the full logo before fading out
   requestAnimationFrame(() => {
     build?.classList.add("is-charging");
   });
 
-  // Match CSS (~1.1s charge) + short hold, then fade out
-  const hold = reduceMotion ? 400 : 1350;
+  // CSS charge ≈ 0.65s; keep the completed mark on screen longer
+  const hold = reduceMotion ? 450 : 1650;
 
   setTimeout(() => {
     build?.classList.add("is-done");

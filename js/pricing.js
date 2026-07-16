@@ -47,6 +47,8 @@ function dailyRateFor(countryName) {
 }
 
 function volumeDiscount(days) {
+  if (days >= 180) return 0.68;
+  if (days >= 90) return 0.72;
   if (days >= 30) return 0.78;
   if (days >= 15) return 0.85;
   if (days >= 7) return 0.92;
@@ -94,7 +96,7 @@ function initPricingPage() {
       countrySelect.value && (option?.dataset.name || option?.textContent || "");
     const fromMap = selectedId ? countryById.get(selectedId)?.name || "" : "";
     const country = fromSelect || fromMap;
-    const days = Math.max(1, Math.min(90, Number(daysInput.value) || 1));
+    const days = Math.max(1, Math.min(365, Number(daysInput.value) || 1));
     daysInput.value = String(days);
     daysValue.textContent = String(days);
     syncDayPresets(days);

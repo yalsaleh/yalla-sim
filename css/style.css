@@ -81,33 +81,31 @@ body {
   height: 100%;
   object-fit: contain;
   opacity: 0;
-  transform: translateY(18px) scale(0.92);
-  filter: blur(2px);
+  /* Fade/scale in place — no slide, so curved layers never wipe through each other */
+  transform: scale(0.94);
   transition:
-    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.75s cubic-bezier(0.16, 1, 0.3, 1),
-    filter 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform, filter;
+    opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+  pointer-events: none;
 }
 
 .logo-build .logo-part.show {
   opacity: 1;
-  transform: translateY(0) scale(1);
-  filter: blur(0);
+  transform: scale(1);
 }
 
-/* Slight stagger flavor per layer */
 .logo-build .logo-part--dot.show {
-  transition-duration: 0.65s, 0.7s, 0.65s;
+  transition-duration: 0.5s, 0.55s;
 }
 .logo-build .logo-part--arc.show {
-  transition-duration: 0.7s, 0.75s, 0.7s;
+  transition-duration: 0.55s, 0.6s;
 }
 .logo-build .logo-part--sim.show {
-  transition-duration: 0.75s, 0.8s, 0.75s;
+  transition-duration: 0.6s, 0.65s;
 }
 .logo-build .logo-part--yalla.show {
-  transition-duration: 0.8s, 0.85s, 0.8s;
+  transition-duration: 0.65s, 0.7s;
 }
 
 /* ── Layout ── */

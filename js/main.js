@@ -20,24 +20,23 @@ function initSplash() {
 
   if (!splash || !page) return;
 
-  // Bottom → top Wi‑Fi build: dot → arc → sim → yalla
-  // Overlapping delays so each layer starts while the previous is still easing in
+  // Bottom → top: whole curved pieces fade in (dot → arc → sim → yalla).
+  // Stagger enough that each layer is mostly visible before the next starts.
   const sequence = [
-    { sel: ".logo-part--dot",   delay: 280 },
-    { sel: ".logo-part--arc",   delay: 720 },
-    { sel: ".logo-part--sim",   delay: 1180 },
-    { sel: ".logo-part--yalla", delay: 1680 },
+    { sel: ".logo-part--dot",   delay: 200 },
+    { sel: ".logo-part--arc",   delay: 750 },
+    { sel: ".logo-part--sim",   delay: 1350 },
+    { sel: ".logo-part--yalla", delay: 2000 },
   ];
 
   sequence.forEach(({ sel, delay }) => {
     setTimeout(() => splash.querySelector(sel)?.classList.add("show"), delay);
   });
 
-  // Hold the completed logo briefly, then fade into the page
   setTimeout(() => {
     splash.classList.add("hidden");
     page.classList.add("visible");
-  }, 3100);
+  }, 3400);
 }
 
 function initSmoothAnimation() {

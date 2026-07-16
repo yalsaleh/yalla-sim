@@ -49,43 +49,29 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ── Scroll reveals ── */
+/* ── Scroll reveals (opacity + translate only — no blur/filter for smooth scroll) ── */
 
 [data-reveal] {
   --d: 0s;
   opacity: 0;
-  transform: translate3d(0, 40px, 0) scale(0.985);
-  filter: blur(6px);
-  will-change: opacity, transform, filter;
+  transform: translate3d(0, 28px, 0);
+  transition: none; /* instant reset when leaving view */
 }
 
 [data-reveal].is-in {
-  animation: reveal-rise 0.95s cubic-bezier(0.16, 1, 0.3, 1) both;
-  animation-delay: var(--d);
-}
-
-@keyframes reveal-rise {
-  0% {
-    opacity: 0;
-    transform: translate3d(0, 40px, 0) scale(0.985);
-    filter: blur(6px);
-  }
-  60% {
-    filter: blur(0);
-  }
-  100% {
-    opacity: 1;
-    transform: translate3d(0, 0, 0) scale(1);
-    filter: blur(0);
-  }
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition:
+    opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--d);
 }
 
 @media (prefers-reduced-motion: reduce) {
   [data-reveal] {
     opacity: 1;
     transform: none;
-    filter: none;
-    animation: none !important;
+    transition: none !important;
   }
 
   .how-bubble,
@@ -336,23 +322,25 @@ body {
   max-width: 800px;
   display: flex;
   justify-content: center;
-  overflow-x: clip; /* contain 110%/100vw showcase bg without clipping page titles */
+  /* keep overflow visible so the expanding orange wash stays on screen */
+  overflow: visible;
 }
 
 .hero__showcase-bg {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -40%);
-  width: 110%;
-  height: 80%;
+  width: 120%;
+  height: 90%;
   background: radial-gradient(circle at top, var(--orange-light) 0%, var(--orange) 100%);
   border-radius: 40px 40px 0 0;
   z-index: 0;
   opacity: 1;
+  transform: translate3d(-50%, -40%, 0);
   transform-origin: center top;
-  will-change: transform; /* Forces GPU acceleration for buttery smoothness */
+  will-change: transform;
   pointer-events: none; /* overflows over the hero CTA — don't steal taps on mobile */
+  backface-visibility: hidden;
 }
 
 .tablet-mockup,

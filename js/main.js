@@ -80,8 +80,8 @@ function initScrollReveal() {
       });
     },
     {
-      threshold: 0.16,
-      rootMargin: "0px 0px -10% 0px",
+      threshold: 0.12,
+      rootMargin: "0px 0px -6% 0px",
     }
   );
 
@@ -116,47 +116,66 @@ function initScrollReveal() {
 }
 
 function initSmoothAnimation() {
-  const bg = document.querySelector('.hero__showcase-bg');
+  const bg = document.querySelector(".hero__showcase-bg");
   if (!bg) return;
-  
+
   let targetMouseX = 0;
   let targetMouseY = 0;
   let currentMouseX = 0;
   let currentMouseY = 0;
+  let latestScrollY = window.scrollY;
+  let rafId = 0;
+  let needsFrame = true;
 
-  // Track mouse
-  document.addEventListener('mousemove', (e) => {
-    targetMouseX = (e.clientX / window.innerWidth) - 0.5;
-    targetMouseY = (e.clientY / window.innerHeight) - 0.5;
-  });
+  const queueFrame = () => {
+    if (rafId) return;
+    rafId = requestAnimationFrame(animate);
+  };
 
-  // Animation Loop
+  window.addEventListener(
+    "scroll",
+    () => {
+      latestScrollY = window.scrollY;
+      needsFrame = true;
+      queueFrame();
+    },
+    { passive: true }
+  );
+
+  document.addEventListener(
+    "mousemove",
+    (e) => {
+      targetMouseX = e.clientX / window.innerWidth - 0.5;
+      targetMouseY = e.clientY / window.innerHeight - 0.5;
+      needsFrame = true;
+      queueFrame();
+    },
+    { passive: true }
+  );
+
   function animate() {
-    // Parallax mouse smoothing
-    currentMouseX += (targetMouseX - currentMouseX) * 0.08;
-    currentMouseY += (targetMouseY - currentMouseY) * 0.08;
-    
-    // READ SCROLL DIRECTLY (No LERP = Zero lag against native scrolling)
-    const scrollY = window.scrollY;
-    
-    // Scale up as you scroll (cap so it doesn't blanket the whole page)
-    const scrollScale = Math.min(1 + (scrollY * 0.015), 4);
-    
-    // Parallax shift
-    const shiftX = currentMouseX * 5; 
-    const shiftY = currentMouseY * 5; 
-    
-    // Use translate3d to force hardware (GPU) acceleration.
-    // Notice we REMOVED border-radius updates. Updating border-radius in JS 
-    // triggers CPU layout recalculations every frame (which causes lag).
-    // Scaling a static rounded box naturally pushes the corners off screen seamlessly!
+    rafId = 0;
+
+    currentMouseX += (targetMouseX - currentMouseX) * 0.1;
+    currentMouseY += (targetMouseY - currentMouseY) * 0.1;
+
+    const scrollScale = Math.min(1 + latestScrollY * 0.012, 3.2);
+    const shiftX = currentMouseX * 4;
+    const shiftY = currentMouseY * 4;
+
     bg.style.transform = `translate3d(calc(-50% + ${shiftX}%), calc(-40% + ${shiftY}%), 0) scale(${scrollScale})`;
 
-    requestAnimationFrame(animate);
+    const stillEasing =
+      Math.abs(targetMouseX - currentMouseX) > 0.001 ||
+      Math.abs(targetMouseY - currentMouseY) > 0.001;
+
+    if (stillEasing || needsFrame) {
+      needsFrame = stillEasing;
+      queueFrame();
+    }
   }
-  
-  // Start loop
-  animate();
+
+  queueFrame();
 }
 
 function loadScript(src) {

@@ -97,11 +97,13 @@ function initPricingPage() {
     const days = Math.max(1, Math.min(90, Number(daysInput.value) || 1));
     daysInput.value = String(days);
     daysValue.textContent = String(days);
+    syncDayPresets(days);
 
     if (!country) {
       priceEl.textContent = "—";
       rateEl.textContent = "—";
       summaryEl.textContent = "Pick a country and trip length to see your estimate.";
+      if (mapHint) mapHint.textContent = "Tap a country to price your trip";
       cta.href = "#";
       cta.classList.add("is-disabled");
       return;
@@ -116,22 +118,39 @@ function initPricingPage() {
     cta.classList.remove("is-disabled");
   }
 
+  const MAP_FILL = "#ffb74d";
+  const MAP_HOVER = "#ff9800";
+  const MAP_SELECTED = "#e65100";
+  const mapHint = document.getElementById("map-hint");
+
+  function resetPath(pathEl) {
+    pathEl.classList.remove("is-selected");
+    pathEl.setAttribute("fill", MAP_FILL);
+    pathEl.setAttribute("fill-opacity", "0.72");
+    pathEl.setAttribute("stroke", "#fffaf6");
+    pathEl.setAttribute("stroke-width", "0.55");
+  }
+
   function highlightCountry(id) {
-    pathById.forEach((pathEl) => {
-      pathEl.classList.remove("is-selected");
-      pathEl.setAttribute("fill", "#e8dfd4");
-      pathEl.setAttribute("stroke", "#fffaf6");
-      pathEl.setAttribute("stroke-width", "0.6");
-    });
+    pathById.forEach((pathEl) => resetPath(pathEl));
     selectedId = id;
     const pathEl = pathById.get(id);
     if (pathEl) {
       pathEl.classList.add("is-selected");
-      pathEl.setAttribute("fill", "#FF9800");
+      pathEl.setAttribute("fill", MAP_SELECTED);
+      pathEl.setAttribute("fill-opacity", "1");
       pathEl.setAttribute("stroke", "#ffffff");
-      pathEl.setAttribute("stroke-width", "1.2");
+      pathEl.setAttribute("stroke-width", "1.1");
       pathEl.parentNode.appendChild(pathEl);
     }
+    const name = countryById.get(id)?.name;
+    if (mapHint && name) mapHint.textContent = name;
+  }
+
+  function syncDayPresets(days) {
+    document.querySelectorAll(".pricing-preset").forEach((btn) => {
+      btn.classList.toggle("is-active", Number(btn.dataset.days) === days);
+    });
   }
 
   function selectCountryById(id) {
@@ -183,18 +202,21 @@ function initPricingPage() {
     const id = countrySelect.value;
     if (id) highlightCountry(id);
     else {
-      pathById.forEach((pathEl) => {
-        pathEl.classList.remove("is-selected");
-        pathEl.setAttribute("fill", "#e8dfd4");
-        pathEl.setAttribute("stroke", "#fffaf6");
-        pathEl.setAttribute("stroke-width", "0.6");
-      });
+      pathById.forEach((pathEl) => resetPath(pathEl));
       selectedId = null;
+      if (mapHint) mapHint.textContent = "Tap a country to price your trip";
     }
     updateUI();
   });
 
   daysInput.addEventListener("input", updateUI);
+
+  document.querySelectorAll(".pricing-preset").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      daysInput.value = String(btn.dataset.days || 7);
+      updateUI();
+    });
+  });
   searchInput?.addEventListener("input", (e) => rebuildCountrySelect(e.target.value));
   searchInput?.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
@@ -252,9 +274,10 @@ function initPricingPage() {
         .join("path")
         .attr("d", path)
         .attr("class", "country-path")
-        .attr("fill", "#e8dfd4")
+        .attr("fill", MAP_FILL)
+        .attr("fill-opacity", 0.72)
         .attr("stroke", "#fffaf6")
-        .attr("stroke-width", 0.6)
+        .attr("stroke-width", 0.55)
         .attr("data-id", (d) => String(d.id))
         .attr("data-name", (d) => d.properties.name || "")
         .on("click", function (event, d) {
@@ -262,12 +285,12 @@ function initPricingPage() {
         })
         .on("mouseenter", function () {
           if (!this.classList.contains("is-selected")) {
-            d3.select(this).attr("fill", "#ffcc80");
+            d3.select(this).attr("fill", MAP_HOVER).attr("fill-opacity", 1);
           }
         })
         .on("mouseleave", function () {
           if (!this.classList.contains("is-selected")) {
-            d3.select(this).attr("fill", "#e8dfd4");
+            d3.select(this).attr("fill", MAP_FILL).attr("fill-opacity", 0.72);
           }
         })
         .each(function (d) {
@@ -277,8 +300,8 @@ function initPricingPage() {
       // Default: Japan as a friendly starting pick if present
       const japan = sorted.find((f) => f.properties.name === "Japan");
       if (japan) {
-        selectCountryById(String(japan.id));
         daysInput.value = "7";
+        selectCountryById(String(japan.id));
       }
       updateUI();
     })

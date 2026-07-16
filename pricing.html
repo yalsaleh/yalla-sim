@@ -7,78 +7,94 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=smooth1">
+  <link rel="stylesheet" href="css/style.css?v=splash2">
 </head>
 <body>
 
   <div id="page" class="page visible">
-    <div class="nav-wrapper">
-      <nav class="nav">
-        <a href="index.html" class="nav__brand">
-          <img src="assets/logo-nav.png?v=1" alt="Yalla Sim" class="nav__logo">
-        </a>
-        <ul class="nav__links">
-          <li><a href="index.html#benefits">Why us</a></li>
-          <li><a href="index.html#how-it-works"><span class="nav__full">How it Works</span><span class="nav__short">How</span></a></li>
-          <li><a href="pricing.html" class="active">Pricing</a></li>
-          <li><a href="support.html">Contact</a></li>
-        </ul>
-        <a href="https://wa.me/96550920045" data-whatsapp class="nav__cta">Message us &rsaquo;</a>
-      </nav>
-    </div>
+    <div class="page-main">
+      <div class="page-wash page-wash--pricing" aria-hidden="true"></div>
 
-    <section class="pricing">
-      <header class="pricing__header">
-        <h1 class="pricing__title">
-          <span>Pick a country.</span>
-          <span>See your price.</span>
-        </h1>
-        <p class="pricing__subtitle">Choose where you need internet and for how many days. Then message us on WhatsApp to confirm — no app required.</p>
-      </header>
-
-      <div class="pricing__layout">
-        <aside class="pricing__panel glass-card">
-          <label class="pricing-field">
-            <span class="pricing-field__label">Search</span>
-            <input type="search" id="country-search" class="pricing-input" placeholder="Search countries…" autocomplete="off">
-          </label>
-
-          <label class="pricing-field">
-            <span class="pricing-field__label">Country</span>
-            <select id="country-select" class="pricing-input pricing-select">
-              <option value="">Loading countries…</option>
-            </select>
-          </label>
-
-          <label class="pricing-field">
-            <span class="pricing-field__label">Days <strong id="days-value">7</strong></span>
-            <input type="range" id="days-input" class="pricing-range" min="1" max="90" value="7">
-            <div class="pricing-range-hints">
-              <span>1 day</span>
-              <span>90 days</span>
-            </div>
-          </label>
-
-          <div class="pricing-quote">
-            <p class="pricing-quote__label" id="price-summary">Pick a country and trip length to see your estimate.</p>
-            <p class="pricing-quote__price" id="price-value">—</p>
-            <p class="pricing-quote__rate">Daily rate: <span id="rate-value">—</span></p>
-            <p class="pricing-quote__note">Estimate only — final price confirmed on WhatsApp.</p>
-          </div>
-
-          <a id="pricing-cta" class="btn-primary pricing-cta is-disabled" href="https://wa.me/96550920045" target="_blank" rel="noopener noreferrer">
-            Confirm on WhatsApp &rsaquo;
+      <div class="nav-wrapper">
+        <nav class="nav">
+          <a href="index.html" class="nav__brand">
+            <img src="assets/logo-nav.png?v=2" alt="Yalla Sim" class="nav__logo">
           </a>
-        </aside>
-
-        <div class="pricing__map-wrap">
-          <div class="pricing__map-card">
-            <div class="pricing__map-label">Tap a country on the map</div>
-            <svg id="world-map" class="world-map" role="img" aria-label="World map"></svg>
-          </div>
-        </div>
+          <ul class="nav__links">
+            <li><a href="index.html#benefits">Why us</a></li>
+            <li><a href="index.html#how-it-works"><span class="nav__full">How it Works</span><span class="nav__short">How</span></a></li>
+            <li><a href="pricing.html" class="active">Pricing</a></li>
+            <li><a href="support.html">Contact</a></li>
+          </ul>
+          <a href="https://wa.me/96550920045" data-whatsapp class="nav__cta">Message us &rsaquo;</a>
+        </nav>
       </div>
-    </section>
+
+      <section class="pricing">
+        <header class="pricing__header">
+          <p class="pricing__eyebrow">Pricing</p>
+          <h1 class="pricing__title">Fair rates for your trip</h1>
+          <p class="pricing__subtitle">Pick a country and how long you need internet. Get an estimate, then confirm on WhatsApp — no app required.</p>
+        </header>
+
+        <div class="pricing__layout">
+          <div class="pricing__map">
+            <div class="pricing__map-head">
+              <p class="pricing__map-label">Coverage map</p>
+              <p class="pricing__map-hint" id="map-hint">Tap a country to price your trip</p>
+            </div>
+            <div class="pricing__map-stage">
+              <svg id="world-map" class="world-map" role="img" aria-label="World map"></svg>
+            </div>
+          </div>
+
+          <aside class="pricing__panel">
+            <div class="pricing__panel-head">
+              <h2 class="pricing__panel-title">Your estimate</h2>
+              <p class="pricing__panel-copy">Search, select, set your days.</p>
+            </div>
+
+            <label class="pricing-field">
+              <span class="pricing-field__label">Search</span>
+              <input type="search" id="country-search" class="pricing-input" placeholder="Type a country…" autocomplete="off">
+            </label>
+
+            <label class="pricing-field">
+              <span class="pricing-field__label">Country</span>
+              <select id="country-select" class="pricing-input pricing-select">
+                <option value="">Loading countries…</option>
+              </select>
+            </label>
+
+            <div class="pricing-field">
+              <span class="pricing-field__label">Trip length <strong id="days-value">7</strong> days</span>
+              <div class="pricing-presets" role="group" aria-label="Quick day presets">
+                <button type="button" class="pricing-preset" data-days="3">3</button>
+                <button type="button" class="pricing-preset is-active" data-days="7">7</button>
+                <button type="button" class="pricing-preset" data-days="14">14</button>
+                <button type="button" class="pricing-preset" data-days="30">30</button>
+              </div>
+              <input type="range" id="days-input" class="pricing-range" min="1" max="90" value="7">
+              <div class="pricing-range-hints">
+                <span>1 day</span>
+                <span>90 days</span>
+              </div>
+            </div>
+
+            <div class="pricing-quote">
+              <p class="pricing-quote__label" id="price-summary">Pick a country and trip length to see your estimate.</p>
+              <p class="pricing-quote__price" id="price-value">—</p>
+              <p class="pricing-quote__rate">Daily rate: <span id="rate-value">—</span></p>
+              <p class="pricing-quote__note">Estimate only — final price confirmed on WhatsApp.</p>
+            </div>
+
+            <a id="pricing-cta" class="btn-primary pricing-cta is-disabled" href="https://wa.me/96550920045" target="_blank" rel="noopener noreferrer">
+              Confirm on WhatsApp &rsaquo;
+            </a>
+          </aside>
+        </div>
+      </section>
+    </div>
 
     <footer class="footer">
       <img src="assets/logo.png" alt="Yalla Sim Logo" class="footer__logo">
@@ -87,7 +103,7 @@
   </div>
 
   <script src="js/config.js?v=965"></script>
-  <script src="js/main.js?v=smooth1"></script>
-  <script src="js/pricing.js?v=3"></script>
+  <script src="js/main.js?v=splash2"></script>
+  <script src="js/pricing.js?v=4"></script>
 </body>
 </html>

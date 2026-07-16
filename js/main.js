@@ -26,14 +26,16 @@ function initSplash() {
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  // Wi‑Fi charge: one radial mask expands from the signal origin
+  // Wi‑Fi charge: quick radial expand from the signal origin
   requestAnimationFrame(() => {
     build?.classList.add("is-charging");
   });
 
-  const hold = reduceMotion ? 700 : 2800;
+  // Match CSS (~1.1s charge) + short hold, then fade out
+  const hold = reduceMotion ? 400 : 1350;
 
   setTimeout(() => {
+    build?.classList.add("is-done");
     splash.classList.add("hidden");
     page.classList.add("visible");
     document.dispatchEvent(new CustomEvent("yalla:ready"));
@@ -105,17 +107,16 @@ function initScrollReveal() {
 
 function initSmoothAnimation() {
   const wash = document.querySelector(".page-wash");
-  const page = document.getElementById("page");
+  const main = document.querySelector(".page-main") || document.getElementById("page");
   const showcase = document.querySelector(".hero__showcase");
-  if (!wash || !page) return;
+  if (!wash || !main) return;
 
-  // Bottom is CSS (0) — solid footer background masks orange at the border line.
+  // Wash is inside .page-main (bottom: 0) so it stops at the footer border.
   wash.style.transform = "";
   wash.style.bottom = "0";
 
   const syncWashTop = () => {
     if (!showcase) return;
-    // offsetTop is relative to .page (positioned ancestor)
     wash.style.top = `${Math.max(0, showcase.offsetTop - 24)}px`;
   };
 

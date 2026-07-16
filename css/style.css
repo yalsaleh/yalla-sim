@@ -49,6 +49,53 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* ── Scroll reveals ── */
+
+[data-reveal] {
+  --d: 0s;
+  opacity: 0;
+  transform: translate3d(0, 40px, 0) scale(0.985);
+  filter: blur(6px);
+  will-change: opacity, transform, filter;
+}
+
+[data-reveal].is-in {
+  animation: reveal-rise 0.95s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--d);
+}
+
+@keyframes reveal-rise {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 40px, 0) scale(0.985);
+    filter: blur(6px);
+  }
+  60% {
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    animation: none !important;
+  }
+
+  .how-bubble,
+  .how-chat.is-in .how-bubble {
+    opacity: 1;
+    transform: none;
+    animation: none !important;
+  }
+}
+
 /* ── Splash ── */
 
 .splash {
@@ -837,7 +884,12 @@ body {
   font-size: 0.92rem;
   line-height: 1.45;
   color: var(--text);
-  animation: how-bubble-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  opacity: 0;
+  transform: translate3d(0, 12px, 0) scale(0.98);
+}
+
+.how-chat.is-in .how-bubble {
+  animation: how-bubble-in 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .how-bubble--out {
@@ -859,19 +911,19 @@ body {
   box-shadow: 0 8px 20px rgba(255, 152, 0, 0.12);
 }
 
-.how-bubble:nth-child(1) { animation-delay: 0.1s; }
-.how-bubble:nth-child(2) { animation-delay: 0.25s; }
-.how-bubble:nth-child(3) { animation-delay: 0.4s; }
-.how-bubble:nth-child(4) { animation-delay: 0.55s; }
+.how-chat.is-in .how-bubble:nth-child(1) { animation-delay: 0.12s; }
+.how-chat.is-in .how-bubble:nth-child(2) { animation-delay: 0.28s; }
+.how-chat.is-in .how-bubble:nth-child(3) { animation-delay: 0.44s; }
+.how-chat.is-in .how-bubble:nth-child(4) { animation-delay: 0.6s; }
 
 @keyframes how-bubble-in {
   from {
     opacity: 0;
-    transform: translateY(10px) scale(0.98);
+    transform: translate3d(0, 12px, 0) scale(0.98);
   }
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translate3d(0, 0, 0) scale(1);
   }
 }
 

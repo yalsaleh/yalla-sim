@@ -18,7 +18,10 @@ function initSplash() {
   const splash = document.getElementById("splash");
   const page = document.getElementById("page");
 
-  if (!splash || !page) return;
+  if (!splash || !page) {
+    document.dispatchEvent(new CustomEvent("yalla:ready"));
+    return;
+  }
 
   // Bottom → top: whole curved pieces fade in (dot → arc → sim → yalla).
   // Stagger enough that each layer is mostly visible before the next starts.
@@ -36,7 +39,80 @@ function initSplash() {
   setTimeout(() => {
     splash.classList.add("hidden");
     page.classList.add("visible");
+    document.dispatchEvent(new CustomEvent("yalla:ready"));
   }, 3400);
+}
+
+function revealItemsIn(root) {
+  const items = [
+    ...(root.matches?.("[data-reveal]") ? [root] : []),
+    ...root.querySelectorAll("[data-reveal]"),
+  ];
+  items.forEach((el) => el.classList.remove("is-in"));
+  void root.offsetWidth;
+  requestAnimationFrame(() => {
+    items.forEach((el) => el.classList.add("is-in"));
+  });
+  return items;
+}
+
+function initScrollReveal() {
+  const nodes = document.querySelectorAll("[data-reveal]");
+  if (!nodes.length) return;
+
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduceMotion) {
+    nodes.forEach((el) => el.classList.add("is-in"));
+    return;
+  }
+
+  let navLockUntil = 0;
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-in");
+        } else if (Date.now() > navLockUntil) {
+          // Leave view → reset so scrolling back up replays the reveal
+          entry.target.classList.remove("is-in");
+        }
+      });
+    },
+    {
+      threshold: 0.16,
+      rootMargin: "0px 0px -10% 0px",
+    }
+  );
+
+  nodes.forEach((el) => observer.observe(el));
+
+  document.querySelectorAll('a[href^="#"]').forEach((link) => {
+    link.addEventListener("click", (e) => {
+      const hash = link.getAttribute("href");
+      if (!hash || hash === "#") return;
+      const section = document.querySelector(hash);
+      if (!section) return;
+
+      e.preventDefault();
+      navLockUntil = Date.now() + 1200;
+      revealItemsIn(section);
+      section.scrollIntoView({ behavior: "smooth", block: "start" });
+      history.pushState(null, "", hash);
+    });
+  });
+
+  // Deep link e.g. index.html#benefits after splash
+  if (location.hash) {
+    const section = document.querySelector(location.hash);
+    if (section) {
+      setTimeout(() => {
+        navLockUntil = Date.now() + 1200;
+        revealItemsIn(section);
+        section.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 60);
+    }
+  }
 }
 
 function initSmoothAnimation() {
@@ -184,4 +260,12 @@ document.addEventListener("DOMContentLoaded", () => {
   initSplash();
   initSmoothAnimation();
   initCoverageMap();
+
+  const page = document.getElementById("page");
+  const splash = document.getElementById("splash");
+  if (!splash || page?.classList.contains("visible")) {
+    initScrollReveal();
+  } else {
+    document.addEventListener("yalla:ready", initScrollReveal, { once: true });
+  }
 });

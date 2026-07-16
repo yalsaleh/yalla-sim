@@ -226,6 +226,11 @@ body {
   justify-content: center;
 }
 
+.hero > .btn-primary {
+  position: relative;
+  z-index: 3;
+}
+
 .hero__title {
   font-family: 'Nunito', 'Plus Jakarta Sans', sans-serif;
   font-size: clamp(3rem, 7vw, 5.5rem);
@@ -297,6 +302,7 @@ body {
   opacity: 1;
   transform-origin: center top;
   will-change: transform; /* Forces GPU acceleration for buttery smoothness */
+  pointer-events: none; /* overflows over the hero CTA — don't steal taps on mobile */
 }
 
 .tablet-mockup,

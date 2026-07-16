@@ -64,8 +64,8 @@ function initSmoothAnimation() {
     // READ SCROLL DIRECTLY (No LERP = Zero lag against native scrolling)
     const scrollY = window.scrollY;
     
-    // Scale up as you scroll
-    const scrollScale = 1 + (scrollY * 0.015);
+    // Scale up as you scroll (cap so it doesn't blanket the whole page)
+    const scrollScale = Math.min(1 + (scrollY * 0.015), 4);
     
     // Parallax shift
     const shiftX = currentMouseX * 5; 

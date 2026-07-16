@@ -75,7 +75,7 @@ function getWhatsAppUrlForSelection(country, days, price) {
 function initPricingPage() {
   const countrySelect = document.getElementById("country-select");
   const daysInput = document.getElementById("days-input");
-  const daysValue = document.getElementById("days-value");
+  const daysText = document.getElementById("days-text");
   const priceEl = document.getElementById("price-value");
   const rateEl = document.getElementById("rate-value");
   const summaryEl = document.getElementById("price-summary");
@@ -90,16 +90,26 @@ function initPricingPage() {
   let pathById = new Map();
   let allCountries = [];
 
+  function clampDays(value) {
+    const n = Math.round(Number(value));
+    if (!Number.isFinite(n)) return 1;
+    return Math.max(1, Math.min(365, n));
+  }
+
+  function setDays(value, { syncText = true, syncRange = true } = {}) {
+    const days = clampDays(value);
+    if (syncRange) daysInput.value = String(days);
+    if (syncText && daysText) daysText.value = String(days);
+    return days;
+  }
+
   function updateUI() {
     const option = countrySelect.selectedOptions[0];
     const fromSelect =
       countrySelect.value && (option?.dataset.name || option?.textContent || "");
     const fromMap = selectedId ? countryById.get(selectedId)?.name || "" : "";
     const country = fromSelect || fromMap;
-    const days = Math.max(1, Math.min(365, Number(daysInput.value) || 1));
-    daysInput.value = String(days);
-    daysValue.textContent = String(days);
-    syncDayPresets(days);
+    const days = setDays(daysInput.value);
 
     if (!country) {
       priceEl.textContent = "—";
@@ -147,12 +157,6 @@ function initPricingPage() {
     }
     const name = countryById.get(id)?.name;
     if (mapHint && name) mapHint.textContent = name;
-  }
-
-  function syncDayPresets(days) {
-    document.querySelectorAll(".pricing-preset").forEach((btn) => {
-      btn.classList.toggle("is-active", Number(btn.dataset.days) === days);
-    });
   }
 
   function selectCountryById(id) {
@@ -211,14 +215,33 @@ function initPricingPage() {
     updateUI();
   });
 
-  daysInput.addEventListener("input", updateUI);
-
-  document.querySelectorAll(".pricing-preset").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      daysInput.value = String(btn.dataset.days || 7);
-      updateUI();
-    });
+  daysInput.addEventListener("input", () => {
+    setDays(daysInput.value, { syncText: true, syncRange: false });
+    updateUI();
   });
+
+  daysText?.addEventListener("input", () => {
+    const raw = daysText.value.trim();
+    if (raw === "") return; // allow clearing while typing
+    const days = clampDays(raw);
+    daysInput.value = String(days);
+    updateUI();
+  });
+
+  daysText?.addEventListener("change", () => {
+    setDays(daysText.value === "" ? 1 : daysText.value);
+    updateUI();
+  });
+
+  daysText?.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      setDays(daysText.value === "" ? 1 : daysText.value);
+      updateUI();
+      daysText.blur();
+    }
+  });
+
   searchInput?.addEventListener("input", (e) => rebuildCountrySelect(e.target.value));
   searchInput?.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {

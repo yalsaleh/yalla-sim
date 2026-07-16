@@ -1668,38 +1668,18 @@ body {
   padding-right: 40px;
 }
 
-.pricing-presets {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
+#days-text {
+  -moz-appearance: textfield;
 }
 
-.pricing-preset {
-  appearance: none;
-  border: 1px solid rgba(255, 152, 0, 0.22);
-  background: #fffaf6;
-  color: var(--text);
-  font: inherit;
-  font-size: 0.92rem;
-  font-weight: 700;
-  padding: 10px 0;
-  border-radius: 999px;
-  cursor: pointer;
-  transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.15s;
-}
-
-.pricing-preset:hover {
-  border-color: var(--orange);
-  color: #e68900;
-}
-
-.pricing-preset.is-active {
-  background: var(--orange);
-  border-color: var(--orange);
-  color: #fff;
+#days-text::-webkit-outer-spin-button,
+#days-text::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .pricing-range {
+  margin-top: 4px;
   width: 100%;
   accent-color: var(--orange);
   cursor: pointer;

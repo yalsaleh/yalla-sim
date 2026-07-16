@@ -119,21 +119,30 @@ function initSmoothAnimation() {
   const wash = document.querySelector(".page-wash");
   const page = document.getElementById("page");
   const showcase = document.querySelector(".hero__showcase");
+  const footer = document.querySelector(".footer");
   if (!wash || !page) return;
 
   let targetMouseX = 0;
-  let targetMouseY = 0;
   let currentMouseX = 0;
-  let currentMouseY = 0;
   let latestScrollY = window.scrollY;
   let rafId = 0;
   let needsFrame = true;
 
-  const syncWashTop = () => {
-    if (!showcase) return;
+  const syncWashBounds = () => {
     const pageTop = page.getBoundingClientRect().top + window.scrollY;
-    const showTop = showcase.getBoundingClientRect().top + window.scrollY;
-    wash.style.top = `${Math.max(0, showTop - pageTop - 24)}px`;
+    const pageHeight = page.offsetHeight;
+
+    if (showcase) {
+      const showTop = showcase.getBoundingClientRect().top + window.scrollY;
+      wash.style.top = `${Math.max(0, showTop - pageTop - 24)}px`;
+    }
+
+    if (footer) {
+      // Stop exactly at the footer rule (line above the logo)
+      const footerTop = footer.getBoundingClientRect().top + window.scrollY;
+      const bottom = Math.max(0, pageHeight - (footerTop - pageTop));
+      wash.style.bottom = `${bottom}px`;
+    }
   };
 
   const queueFrame = () => {
@@ -154,7 +163,7 @@ function initSmoothAnimation() {
   window.addEventListener(
     "resize",
     () => {
-      syncWashTop();
+      syncWashBounds();
       needsFrame = true;
       queueFrame();
     },
@@ -165,7 +174,6 @@ function initSmoothAnimation() {
     "mousemove",
     (e) => {
       targetMouseX = e.clientX / window.innerWidth - 0.5;
-      targetMouseY = e.clientY / window.innerHeight - 0.5;
       needsFrame = true;
       queueFrame();
     },
@@ -176,24 +184,19 @@ function initSmoothAnimation() {
     rafId = 0;
 
     currentMouseX += (targetMouseX - currentMouseX) * 0.1;
-    currentMouseY += (targetMouseY - currentMouseY) * 0.1;
 
     const maxScroll = Math.max(
       1,
       document.documentElement.scrollHeight - window.innerHeight
     );
     const t = Math.min(1, latestScrollY / maxScroll);
-    // Widen + slight vertical settle as you scroll the full page
+    // Widen only — keep bottom edge pinned to the footer line
     const scaleX = 1 + t * 0.22;
-    const scaleY = 1 + t * 0.04;
     const shiftX = currentMouseX * 3;
-    const shiftY = currentMouseY * 2;
 
-    wash.style.transform = `translate3d(calc(-50% + ${shiftX}%), ${shiftY}px, 0) scale(${scaleX}, ${scaleY})`;
+    wash.style.transform = `translate3d(calc(-50% + ${shiftX}%), 0, 0) scaleX(${scaleX})`;
 
-    const stillEasing =
-      Math.abs(targetMouseX - currentMouseX) > 0.001 ||
-      Math.abs(targetMouseY - currentMouseY) > 0.001;
+    const stillEasing = Math.abs(targetMouseX - currentMouseX) > 0.001;
 
     if (stillEasing || needsFrame) {
       needsFrame = stillEasing;
@@ -201,9 +204,11 @@ function initSmoothAnimation() {
     }
   }
 
-  syncWashTop();
-  // After splash / fonts, top can shift — resync once ready
-  document.addEventListener("yalla:ready", syncWashTop, { once: true });
+  syncWashBounds();
+  document.addEventListener("yalla:ready", syncWashBounds, { once: true });
+  // Re-measure after layout/fonts settle
+  setTimeout(syncWashBounds, 100);
+  setTimeout(syncWashBounds, 800);
   queueFrame();
 }
 

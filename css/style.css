@@ -156,12 +156,12 @@ body {
   transform: none;
 }
 
-/* Full-page orange wash — sits behind content, stretches to the footer */
+/* Orange wash — behind content, ends at the footer rule above the logo */
 .page-wash {
   position: absolute;
   top: 52vh;
   left: 50%;
-  bottom: 0;
+  bottom: 220px; /* fallback until JS pins it to the footer border */
   width: min(1400px, 130vw);
   z-index: 0;
   pointer-events: none;
@@ -173,7 +173,7 @@ body {
     var(--orange-light) 0%,
     var(--orange) 28%,
     rgba(255, 152, 0, 0.72) 62%,
-    rgba(255, 152, 0, 0.28) 100%
+    rgba(255, 152, 0, 0.35) 100%
   );
   will-change: transform;
   backface-visibility: hidden;

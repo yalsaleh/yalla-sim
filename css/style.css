@@ -794,11 +794,14 @@ body {
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
-.how-chat__dot {
-  width: 36px;
-  height: 36px;
+.how-chat__avatar {
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #FFB74D, #FF9800);
+  object-fit: contain;
+  padding: 5px;
+  background: #FFF6EC;
+  border: 1px solid rgba(255, 152, 0, 0.2);
   flex-shrink: 0;
 }
 

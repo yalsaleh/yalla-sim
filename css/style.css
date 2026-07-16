@@ -219,12 +219,15 @@ body {
 .nav__brand {
   display: flex;
   align-items: center;
+  height: 28px;
+  overflow: visible;
 }
 
 .nav__logo {
-  width: 38px;
+  width: 56px;
   height: auto;
   display: block;
+  margin-top: -10px;
   opacity: 0.72;
   transition: opacity 0.2s ease;
 }
@@ -1594,8 +1597,13 @@ body {
     border-radius: 20px;
   }
 
+  .nav__brand {
+    height: 24px;
+  }
+
   .nav__logo {
-    width: 30px;
+    width: 46px;
+    margin-top: -8px;
     opacity: 0.65;
   }
 

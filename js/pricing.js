@@ -74,7 +74,7 @@ function planHintFor(countryName) {
 function getWhatsAppUrlForSelection(country, days) {
   const params = new URLSearchParams();
   const dayLabel = `${days} day${days === 1 ? "" : "s"}`;
-  const text = `Hi Yalla Sim! I'm traveling to ${country} for ${dayLabel}. Please send the matching eSIM plans (country, regional, or global).`;
+  const text = `i want an esim for ${country} for ${dayLabel}`;
   params.set("text", text);
   return `https://wa.me/${WHATSAPP_NUMBER}?${params.toString()}`;
 }

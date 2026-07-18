@@ -983,9 +983,30 @@ body {
 }
 
 .how-bubble--final {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
   background: #fff;
   border: 1px solid rgba(255, 152, 0, 0.35);
   box-shadow: 0 8px 20px rgba(255, 152, 0, 0.12);
+}
+
+.how-bubble--final strong {
+  margin-bottom: 2px;
+  font-size: 0.9rem;
+}
+
+.how-plan-line {
+  font-size: 0.86rem;
+  line-height: 1.35;
+  color: #333;
+}
+
+.how-plan-cta {
+  margin-top: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #e65100;
 }
 
 .how-chat.is-in .how-bubble:nth-child(1) { animation-delay: 0.12s; }
@@ -1598,6 +1619,13 @@ body {
   -webkit-font-smoothing: auto;
 }
 
+.pricing__panel-copy {
+  margin: -4px 0 2px;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
 .pricing-field {
   display: flex;
   flex-direction: column;
@@ -1669,37 +1697,44 @@ body {
   color: var(--text-muted);
 }
 
-.pricing-quote {
+.pricing-summary {
   margin-top: 4px;
-  padding: 16px 14px 14px;
+  padding: 16px 14px;
   border-radius: 16px;
-  text-align: center;
+  text-align: left;
   background: rgba(255, 152, 0, 0.1);
   border: 1px solid rgba(255, 152, 0, 0.16);
 }
 
-.pricing-quote__label {
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: var(--text);
-  margin-bottom: 6px;
+.pricing-summary__label {
+  margin: 0 0 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--orange);
 }
 
-.pricing-quote__price {
+.pricing-summary__trip {
+  margin: 0;
   font-family: 'Nunito', 'Plus Jakarta Sans', sans-serif;
-  font-size: clamp(2.1rem, 4vw, 2.6rem);
+  font-size: 1.2rem;
   font-weight: 800;
-  letter-spacing: -0.03em;
-  color: #e65100;
-  line-height: 1.05;
-  margin-bottom: 4px;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  line-height: 1.25;
   -webkit-font-smoothing: auto;
 }
 
-.pricing-quote__rate {
+.pricing-summary__region {
+  margin: 6px 0 0;
   font-size: 0.85rem;
+  line-height: 1.4;
   color: var(--text-muted);
-  margin: 0;
+}
+
+.pricing-summary__region:empty {
+  display: none;
 }
 
 .pricing-quote__note {

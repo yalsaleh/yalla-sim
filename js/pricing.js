@@ -1,73 +1,80 @@
-/* Pricing calculator + interactive world map */
+/* Country + days picker → WhatsApp handoff (plans & prices live in chat) */
 
-const DEFAULT_DAILY_RATE = 4.5;
+const MIDDLE_EAST = new Set([
+  "Bahrain",
+  "Egypt",
+  "Iran",
+  "Iraq",
+  "Israel",
+  "Jordan",
+  "Kuwait",
+  "Lebanon",
+  "Oman",
+  "Palestine",
+  "Qatar",
+  "Saudi Arabia",
+  "Syria",
+  "Turkey",
+  "United Arab Emirates",
+  "Yemen",
+]);
 
-// Higher / lower daily rates for common destinations (USD)
-const RATE_OVERRIDES = {
-  "United States of America": 5.5,
-  "United States": 5.5,
-  Canada: 5.0,
-  Mexico: 3.5,
-  Japan: 5.5,
-  "South Korea": 5.0,
-  China: 4.5,
-  Thailand: 3.0,
-  Vietnam: 2.8,
-  Indonesia: 3.0,
-  Singapore: 5.0,
-  Malaysia: 3.2,
-  Philippines: 3.0,
-  India: 2.5,
-  "United Arab Emirates": 5.5,
-  "Saudi Arabia": 5.0,
-  Turkey: 3.5,
-  Egypt: 3.0,
-  Morocco: 3.2,
-  "South Africa": 3.5,
-  "United Kingdom": 5.5,
-  France: 5.0,
-  Germany: 5.0,
-  Italy: 5.0,
-  Spain: 4.8,
-  Portugal: 4.5,
-  Netherlands: 5.0,
-  Greece: 4.5,
-  Switzerland: 6.0,
-  Australia: 5.5,
-  "New Zealand": 5.5,
-  Brazil: 3.5,
-  Argentina: 3.2,
-  Chile: 3.5,
-  Colombia: 3.0,
-  Peru: 3.0,
-};
+const EUROPE = new Set([
+  "Albania",
+  "Austria",
+  "Belgium",
+  "Bosnia and Herz.",
+  "Bulgaria",
+  "Croatia",
+  "Cyprus",
+  "Czechia",
+  "Denmark",
+  "Estonia",
+  "Finland",
+  "France",
+  "Germany",
+  "Greece",
+  "Hungary",
+  "Iceland",
+  "Ireland",
+  "Italy",
+  "Kosovo",
+  "Latvia",
+  "Lithuania",
+  "Luxembourg",
+  "Malta",
+  "Moldova",
+  "Montenegro",
+  "Netherlands",
+  "North Macedonia",
+  "Norway",
+  "Poland",
+  "Portugal",
+  "Romania",
+  "Serbia",
+  "Slovakia",
+  "Slovenia",
+  "Spain",
+  "Sweden",
+  "Switzerland",
+  "Ukraine",
+  "United Kingdom",
+]);
 
-function dailyRateFor(countryName) {
-  return RATE_OVERRIDES[countryName] ?? DEFAULT_DAILY_RATE;
+function planHintFor(countryName) {
+  if (MIDDLE_EAST.has(countryName)) {
+    return "Likely Middle East / GCC regional plans, plus country options";
+  }
+  if (EUROPE.has(countryName)) {
+    return "Likely Europe regional plans, plus country options";
+  }
+  return "Country plans, plus global options when they fit";
 }
 
-function volumeDiscount(days) {
-  if (days >= 180) return 0.68;
-  if (days >= 90) return 0.72;
-  if (days >= 30) return 0.78;
-  if (days >= 15) return 0.85;
-  if (days >= 7) return 0.92;
-  return 1;
-}
-
-function calcPrice(countryName, days) {
-  const rate = dailyRateFor(countryName);
-  const total = rate * days * volumeDiscount(days);
-  return Math.round(total * 100) / 100;
-}
-
-function formatMoney(n) {
-  return `$${n.toFixed(2)}`;
-}
-
-function getWhatsAppUrlForSelection(country, days, price) {
+function getWhatsAppUrlForSelection(country, days) {
   const params = new URLSearchParams();
-  const text = `Hi Yalla Sim! I need internet in ${country} for ${days} day${days === 1 ? "" : "s"}. Estimated price: ${formatMoney(price)}. Can you confirm?`;
+  const dayLabel = `${days} day${days === 1 ? "" : "s"}`;
+  const text = `Hi Yalla Sim! I'm traveling to ${country} for ${dayLabel}. Please send the matching eSIM plans (country, regional, or global).`;
   params.set("text", text);
   return `https://wa.me/${WHATSAPP_NUMBER}?${params.toString()}`;
 }
@@ -76,19 +83,23 @@ function initPricingPage() {
   const countrySelect = document.getElementById("country-select");
   const daysInput = document.getElementById("days-input");
   const daysText = document.getElementById("days-text");
-  const priceEl = document.getElementById("price-value");
-  const rateEl = document.getElementById("rate-value");
-  const summaryEl = document.getElementById("price-summary");
+  const tripLine = document.getElementById("trip-line");
+  const regionLine = document.getElementById("region-line");
   const cta = document.getElementById("pricing-cta");
   const mapEl = document.getElementById("world-map");
   const searchInput = document.getElementById("country-search");
+  const mapHint = document.getElementById("map-hint");
 
-  if (!countrySelect || !mapEl) return;
+  if (!countrySelect || !mapEl || !cta) return;
 
   let selectedId = null;
   let countryById = new Map();
   let pathById = new Map();
   let allCountries = [];
+
+  const MAP_FILL = "#ffb74d";
+  const MAP_HOVER = "#ff9800";
+  const MAP_SELECTED = "#e65100";
 
   function clampDays(value) {
     const n = Math.round(Number(value));
@@ -103,37 +114,33 @@ function initPricingPage() {
     return days;
   }
 
-  function updateUI() {
+  function currentCountry() {
     const option = countrySelect.selectedOptions[0];
     const fromSelect =
       countrySelect.value && (option?.dataset.name || option?.textContent || "");
     const fromMap = selectedId ? countryById.get(selectedId)?.name || "" : "";
-    const country = fromSelect || fromMap;
+    return fromSelect || fromMap;
+  }
+
+  function updateUI() {
+    const country = currentCountry();
     const days = setDays(daysInput.value);
 
     if (!country) {
-      priceEl.textContent = "—";
-      rateEl.textContent = "—";
-      summaryEl.textContent = "Pick a country and trip length to see your estimate.";
-      if (mapHint) mapHint.textContent = "Tap a country to price your trip";
+      if (tripLine) tripLine.textContent = "Pick a country and days";
+      if (regionLine) regionLine.textContent = "";
+      if (mapHint) mapHint.textContent = "Select a country";
       cta.href = "#";
       cta.classList.add("is-disabled");
       return;
     }
 
-    const rate = dailyRateFor(country);
-    const price = calcPrice(country, days);
-    priceEl.textContent = formatMoney(price);
-    rateEl.textContent = `${formatMoney(rate)} per day`;
-    summaryEl.textContent = `${country} · ${days} day${days === 1 ? "" : "s"}`;
-    cta.href = getWhatsAppUrlForSelection(country, days, price);
+    const dayLabel = `${days} day${days === 1 ? "" : "s"}`;
+    if (tripLine) tripLine.textContent = `${country} · ${dayLabel}`;
+    if (regionLine) regionLine.textContent = planHintFor(country);
+    cta.href = getWhatsAppUrlForSelection(country, days);
     cta.classList.remove("is-disabled");
   }
-
-  const MAP_FILL = "#ffb74d";
-  const MAP_HOVER = "#ff9800";
-  const MAP_SELECTED = "#e65100";
-  const mapHint = document.getElementById("map-hint");
 
   function resetPath(pathEl) {
     pathEl.classList.remove("is-selected");
@@ -197,7 +204,6 @@ function initPricingPage() {
       selectCountryById(matches[0].id);
       return;
     } else if (previous && !matches.some((c) => c.id === previous)) {
-      // Keep map/price for the current pick even if it's filtered out of the list
       countrySelect.value = "";
     }
 
@@ -210,7 +216,7 @@ function initPricingPage() {
     else {
       pathById.forEach((pathEl) => resetPath(pathEl));
       selectedId = null;
-      if (mapHint) mapHint.textContent = "Tap a country to price your trip";
+      if (mapHint) mapHint.textContent = "Select a country";
     }
     updateUI();
   });
@@ -222,9 +228,8 @@ function initPricingPage() {
 
   daysText?.addEventListener("input", () => {
     const raw = daysText.value.trim();
-    if (raw === "") return; // allow clearing while typing
-    const days = clampDays(raw);
-    daysInput.value = String(days);
+    if (raw === "") return;
+    daysInput.value = String(clampDays(raw));
     updateUI();
   });
 
@@ -255,7 +260,6 @@ function initPricingPage() {
     if (cta.classList.contains("is-disabled")) e.preventDefault();
   });
 
-  // Load map with d3 + topojson (from CDN globals)
   loadScript("https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js")
     .then(() => loadScript("https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"))
     .then(() => fetch("assets/countries-110m.json").then((r) => r.json()))
@@ -264,10 +268,7 @@ function initPricingPage() {
       const width = 960;
       const height = 480;
 
-      const projection = d3
-        .geoNaturalEarth1()
-        .fitSize([width, height], countries);
-
+      const projection = d3.geoNaturalEarth1().fitSize([width, height], countries);
       const path = d3.geoPath(projection);
 
       const svg = d3
@@ -276,10 +277,8 @@ function initPricingPage() {
         .attr("preserveAspectRatio", "xMidYMid meet");
 
       svg.selectAll("*").remove();
-
       const g = svg.append("g").attr("class", "map-countries");
 
-      // Sort alphabetically for select
       const sorted = [...countries.features].sort((a, b) =>
         (a.properties.name || "").localeCompare(b.properties.name || "")
       );
@@ -287,9 +286,8 @@ function initPricingPage() {
       sorted.forEach((feature) => {
         const id = String(feature.id);
         const name = feature.properties.name || `Country ${id}`;
-        const info = { id, name };
-        countryById.set(id, info);
-        allCountries.push(info);
+        countryById.set(id, { id, name });
+        allCountries.push({ id, name });
       });
 
       rebuildCountrySelect("");
@@ -305,9 +303,7 @@ function initPricingPage() {
         .attr("stroke-width", 0.55)
         .attr("data-id", (d) => String(d.id))
         .attr("data-name", (d) => d.properties.name || "")
-        .on("click", function (event, d) {
-          selectCountryById(String(d.id));
-        })
+        .on("click", (_event, d) => selectCountryById(String(d.id)))
         .on("mouseenter", function () {
           if (!this.classList.contains("is-selected")) {
             d3.select(this).attr("fill", MAP_HOVER).attr("fill-opacity", 1);
@@ -322,11 +318,10 @@ function initPricingPage() {
           pathById.set(String(d.id), this);
         });
 
-      // Default: Japan as a friendly starting pick if present
-      const japan = sorted.find((f) => f.properties.name === "Japan");
-      if (japan) {
+      const uae = sorted.find((f) => f.properties.name === "United Arab Emirates");
+      if (uae) {
         daysInput.value = "7";
-        selectCountryById(String(japan.id));
+        selectCountryById(String(uae.id));
       }
       updateUI();
     })
